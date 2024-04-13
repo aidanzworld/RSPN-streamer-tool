@@ -21,6 +21,6 @@ This repository hosts the code for the RSPN Streamer Tool, an innovative solutio
 ## Contribution and Support:
 We welcome contributions from the community to enhance and expand the capabilities of the RSPN Streamer Tool. Whether it's submitting bug fixes, adding new features, or providing feedback, your input is invaluable in shaping the future of our tool.
 
-For support, inquiries, or collaboration opportunities, please contact us at [contact@example.com](mailto:contact@example.com). We're here to assist you every step of the way.
+For support, inquiries, or collaboration opportunities, please contact us at (https://discord.gg/bKuNrpQAMp). We're here to assist you every step of the way.
 
 Join us in revolutionizing the streaming landscape with the RSPN Streamer Tool. Happy streaming!
