@@ -588,7 +588,7 @@ Tab:AddButton({
         local ws = game:GetService("Workspace")
         
         -- Asset ID of the new model you want to replace the stadium with
-        local newModelAssetId = "17045890116"
+        local newModelAssetId = "17109696093"
         
         -- Function to replace the stadium model
         local function replaceStadiumModel()
@@ -629,7 +629,7 @@ Tab:AddButton({
         local ws = game:GetService("Workspace")
         
         -- Asset ID of the new model you want to replace the stadium with
-        local newModelAssetId = "17071455135"
+        local newModelAssetId = "17085783605"
         
         -- Function to replace the stadium model
         local function replaceStadiumModel()
