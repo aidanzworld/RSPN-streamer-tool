@@ -664,6 +664,47 @@ Tab:AddButton({
 })
 
 Tab:AddButton({
+	Name = "49ers Stadium",
+	Callback = function()
+        local Players = game:GetService("Players")
+        local ws = game:GetService("Workspace")
+        
+        -- Asset ID of the new model you want to replace the stadium with
+        local newModelAssetId = "17153389037"
+        
+        -- Function to replace the stadium model
+        local function replaceStadiumModel()
+            -- Get the stadium model
+            local stadium = ws.Models.Stadium
+        
+            -- Remove the existing stadium model
+            stadium:Destroy()
+        
+            -- Load the new model using the asset ID
+            local newModel = game:GetObjects("rbxassetid://" .. newModelAssetId)[1]
+        
+            -- Place the new model in the workspace
+            newModel.Parent = ws.Models
+            newModel.Name = "Stadium"
+        end
+        
+        -- Call the function to replace the stadium model
+        replaceStadiumModel()
+        
+        -- Get the Lighting service
+        local Lighting = game:GetService("Lighting")
+        
+        -- Disable shadows for all light sources
+        local lights = game.Workspace:GetDescendants()
+        for _, light in ipairs(lights) do
+            if light:IsA("Light") then
+                light.Shadows = false -- Disable shadows for each light source
+            end
+        end
+  	end    
+})
+
+Tab:AddButton({
 	Name = "Staduim Lighting",
 	Callback = function()
       		OrionLib:MakeNotification({
