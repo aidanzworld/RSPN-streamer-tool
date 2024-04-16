@@ -705,6 +705,47 @@ Tab:AddButton({
 })
 
 Tab:AddButton({
+	Name = "Ravens Stadium",
+	Callback = function()
+        local Players = game:GetService("Players")
+        local ws = game:GetService("Workspace")
+        
+        -- Asset ID of the new model you want to replace the stadium with
+        local newModelAssetId = "17173617509"
+        
+        -- Function to replace the stadium model
+        local function replaceStadiumModel()
+            -- Get the stadium model
+            local stadium = ws.Models.Stadium
+        
+            -- Remove the existing stadium model
+            stadium:Destroy()
+        
+            -- Load the new model using the asset ID
+            local newModel = game:GetObjects("rbxassetid://" .. newModelAssetId)[1]
+        
+            -- Place the new model in the workspace
+            newModel.Parent = ws.Models
+            newModel.Name = "Stadium"
+        end
+        
+        -- Call the function to replace the stadium model
+        replaceStadiumModel()
+        
+        -- Get the Lighting service
+        local Lighting = game:GetService("Lighting")
+        
+        -- Disable shadows for all light sources
+        local lights = game.Workspace:GetDescendants()
+        for _, light in ipairs(lights) do
+            if light:IsA("Light") then
+                light.Shadows = false -- Disable shadows for each light source
+            end
+        end
+  	end    
+})
+
+Tab:AddButton({
 	Name = "Staduim Lighting",
 	Callback = function()
       		OrionLib:MakeNotification({
@@ -1205,6 +1246,42 @@ end
   	end    
 })
 
+local Section = Tab:AddSection({
+	Name = "Field Decals"
+Tab:AddButton({
+	Name = "Ravens Decals",
+	Callback = function()
+      		
+local endZone1Grass = game:GetService("Workspace").Models.Field.Grass.Endzone.One
+local endZoneOneDecal = Instance.new("Decal", endZone1Grass)
+
+local endZone2Grass = game:GetService("Workspace").Models.Field.Grass.Endzone.Two
+local endZoneTwoDecal = Instance.new("Decal", endZone2Grass)
+
+-- TEAM ONE ENDZONE COLOR + LOGO
+endZone1Grass.Color = Color3.fromRGB(36, 23, 115)
+endZoneOneDecal.Face = Enum.NormalId.Front
+endZoneOneDecal.Texture = "16083650191"
+
+if endZone1Grass:FindFirstChild("SurfaceGui") then
+    endZone1Grass.SurfaceGui:Destroy()
+end
+
+-- TEAM TWO ENDZONE COLOR + LOGO
+endZone2Grass.Color = Color3.fromRGB(36, 23, 115)
+endZoneTwoDecal.Face = Enum.NormalId.Front
+endZoneTwoDecal.Texture = "16083631133"
+
+if endZone2Grass:FindFirstChild("SurfaceGui") then
+    endZone2Grass.SurfaceGui:Destroy()
+end
+
+local middleLogo = game:GetService("Workspace").Models.Field.Grass.Normal.Mid.SurfaceGui.ImageLabel
+middleLogo.Image = "rbxassetid://16083664949"
+middleLogo.ImageTransparency = 0
+middleLogo.ScaleType = Enum.ScaleType.Fit
+  	end    
+})
 
 -- HCBB
 
