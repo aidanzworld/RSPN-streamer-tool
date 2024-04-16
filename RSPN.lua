@@ -1550,16 +1550,99 @@ updateGame() -- Call updateGame initially to start updating counts
 })
 
 
+
 Tab:AddButton({
 	Name = "HCBB Count",
 	Callback = function()
-  repeat wait() until game:IsLoaded()
 local base = game.Players.LocalPlayer.PlayerGui.Scoreboard.ScoreHolder.Scoreboard
 
-print("working")
+local homePitchCounter = 0 -- Initialize home pitch counter
+local awayPitchCounter = 0 -- Initialize away pitch counter
+local previousBallCount = 0 -- Initialize previous ball count
+local previousStrikeCount = 0 -- Initialize previous strike count
+local isHomePitch = true -- Variable to track whether it's home pitch or away pitch
 
 -- Function to update the counts based on visibility
-function updateCountsBasedOnVisibility()
+local function updateCountsBasedOnVisibility(ballCount, strikeCount)
+    -- Update pitch counter only when the ball or strike count changes
+    if ballCount ~= previousBallCount or strikeCount ~= previousStrikeCount then
+        if isHomePitch then
+            homePitchCounter = homePitchCounter + 1
+            print("Home pitch count updated to " .. homePitchCounter) -- Debug statement
+        else
+            awayPitchCounter = awayPitchCounter + 1
+            print("Away pitch count updated to " .. awayPitchCounter) -- Debug statement
+        end
+
+        -- Update previous counts
+        previousBallCount = ballCount
+        previousStrikeCount = strikeCount
+
+        -- Update CSV
+        local pitchCount = isHomePitch and homePitchCounter or awayPitchCounter
+        local csvContent = "Count,Pitch\n" .. ballCount .. "-" .. strikeCount .. "," .. pitchCount
+
+        -- Write to a CSV file locally
+        local success, errorMessage = pcall(function()
+            writefile("Counts.csv", csvContent)
+            print("Counts written to CSV")
+        end)
+
+        if not success then
+            warn("Failed to write counts to CSV: " .. errorMessage)
+        end
+    end
+end
+
+-- Function to handle key presses
+local function onKeyDown(input)
+    if input.KeyCode == Enum.KeyCode.P then
+        print("P key pressed") -- Debug statement
+        if isHomePitch then
+            homePitchCounter = 0 -- Reset home pitch counter
+            print("Home pitch counter reset to 1") -- Debug statement
+        else
+            awayPitchCounter = 0 -- Reset away pitch counter
+            print("Away pitch counter reset to 1") -- Debug statement
+        end
+    elseif input.KeyCode == Enum.KeyCode.Equals then
+        print("Equals key pressed") -- Debug statement
+        if isHomePitch then
+            homePitchCounter = homePitchCounter + 1 -- Increment home pitch counter
+            print("Home pitch count incremented to " .. homePitchCounter) -- Debug statement
+        else
+            awayPitchCounter = awayPitchCounter + 1 -- Increment away pitch counter
+            print("Away pitch count incremented to " .. awayPitchCounter) -- Debug statement
+        end
+    elseif input.KeyCode == Enum.KeyCode.L then
+        print("L key pressed") -- Debug statement
+        isHomePitch = not isHomePitch -- Toggle between home and away pitch counts
+        if isHomePitch then
+            print("Switched to Home pitch count") -- Debug statement
+        else
+            print("Switched to Away pitch count") -- Debug statement
+        end
+    end
+
+    updateCountsBasedOnVisibility(previousBallCount, previousStrikeCount) -- Update counts instantly
+
+    -- Update CSV here if needed
+    local pitchCount = isHomePitch and homePitchCounter or awayPitchCounter
+    local csvContent = "Count,Pitch\n" .. previousBallCount .. "-" .. previousStrikeCount .. "," .. pitchCount
+    local success, errorMessage = pcall(function()
+        writefile("Counts.csv", csvContent)
+        print("Counts written to CSV")
+    end)
+    if not success then
+        warn("Failed to write counts to CSV: " .. errorMessage)
+    end
+end
+
+-- Connect the key down event
+game:GetService("UserInputService").InputBegan:Connect(onKeyDown)
+
+-- This function should be called regularly, for example, in your game update loop
+local function updateGame()
     local ballCount = 0
     local strikeCount = 0
 
@@ -1577,29 +1660,14 @@ function updateCountsBasedOnVisibility()
         end
     end
 
-    local csvContent = "Count\n" .. ballCount .. "-" .. strikeCount
-
-    -- Write to a CSV file locally
-    local success, errorMessage = pcall(function()
-        writefile("Counts.csv", csvContent)
-        print("Counts written to CSV")
-    end)
-
-    if not success then
-        warn("Failed to write counts to CSV: " .. errorMessage)
-    end
+    updateCountsBasedOnVisibility(ballCount, strikeCount)
 end
 
--- This function should be called regularly, for example, in your game update loop
-function updateGame()
-    while true do
-        updateCountsBasedOnVisibility()
-        wait(1) -- Adjust this interval based on your preference
-    end
+while true do
+    updateGame()
+    wait(1) -- Adjust this interval based on your preference
 end
-
-updateGame() -- Call updateGame initially to start updating counts
-  	end    
+ end    
 })
 local Tab = Window:MakeTab({
     Name = "Basketball Legends",
