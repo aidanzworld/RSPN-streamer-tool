@@ -15,7 +15,7 @@ local Section = Tab:AddSection({
 Name = <string> - The name of the section.
 ]]
 Tab:AddButton({
-	Name = "Anti-Ban",
+	Name = "Anti-Ban (NOT WORKING)",
 	Callback = function()
         repeat wait() until game:IsLoaded()
         print('Initialized')
