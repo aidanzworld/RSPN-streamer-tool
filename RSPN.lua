@@ -612,138 +612,48 @@ Callback = <function> - The function of the button.
 ]]
 
 local Section = Tab:AddSection({
-	Name = "Staduim Scripts"
+	Name = "Stadiums"
 })
 
 Tab:AddButton({
-	Name = "RSPN Dome",
+	Name = "XFG Championship 20 Stadium (for slang)",
 	Callback = function()
-        local Players = game:GetService("Players")
-        local ws = game:GetService("Workspace")
-        
-        -- Asset ID of the new model you want to replace the stadium with
-        local newModelAssetId = "13981854192"
-        
-        -- Function to replace the stadium model
-        local function replaceStadiumModel()
-            -- Get the stadium model
-            local stadium = ws.Models.Stadium
-        
-            -- Remove the existing stadium model
-            stadium:Destroy()
-        
-            -- Load the new model using the asset ID
-            local newModel = game:GetObjects("rbxassetid://" .. newModelAssetId)[1]
-        
-            -- Place the new model in the workspace
-            newModel.Parent = ws.Models
-            newModel.Name = "Stadium"
-        end
-        
-        -- Call the function to replace the stadium model
-        replaceStadiumModel()
-        
-        -- Get the Lighting service
-        local Lighting = game:GetService("Lighting")
-        
-        -- Disable shadows for all light sources
-        local lights = game.Workspace:GetDescendants()
-        for _, light in ipairs(lights) do
-            if light:IsA("Light") then
-                light.Shadows = false -- Disable shadows for each light source
+-- Replace these values with your actual asset ID
+local selectedAssetId = "17799836832"
+
+-- Function to replace model named "Stadium" with the selected asset ID
+local function replaceStadiumWithAsset()
+    local game = game
+    local workspace = game:GetService("Workspace")
+
+    -- Iterate through each descendant of Workspace
+    for _, descendant in ipairs(workspace:GetDescendants()) do
+        if descendant:IsA("Model") and descendant.Name == "Stadium" then
+            -- Remove existing Stadium model
+            descendant:Destroy()
+
+            -- Create new model using the selected asset ID
+            local assetModel = game:GetObjects("rbxassetid://" .. selectedAssetId)[1]
+            if assetModel then
+                assetModel.Parent = workspace
+                print("Stadium model replaced with asset ID:", selectedAssetId)
+            else
+                warn("Failed to load asset with ID:", selectedAssetId)
             end
         end
-  	end    
+    end
+end
+
+-- Call the function to replace Stadium with the selected asset
+replaceStadiumWithAsset()  
 })
 
 Tab:AddButton({
-	Name = "Bills Stadium",
-	Callback = function()
-        local Players = game:GetService("Players")
-        local ws = game:GetService("Workspace")
-        
-        -- Asset ID of the new model you want to replace the stadium with
-        local newModelAssetId = "17045890116"
-        
-        -- Function to replace the stadium model
-        local function replaceStadiumModel()
-            -- Get the stadium model
-            local stadium = ws.Models.Stadium
-        
-            -- Remove the existing stadium model
-            stadium:Destroy()
-        
-            -- Load the new model using the asset ID
-            local newModel = game:GetObjects("rbxassetid://" .. newModelAssetId)[1]
-        
-            -- Place the new model in the workspace
-            newModel.Parent = ws.Models
-            newModel.Name = "Stadium"
-        end
-        
-        -- Call the function to replace the stadium model
-        replaceStadiumModel()
-        
-        -- Get the Lighting service
-        local Lighting = game:GetService("Lighting")
-        
-        -- Disable shadows for all light sources
-        local lights = game.Workspace:GetDescendants()
-        for _, light in ipairs(lights) do
-            if light:IsA("Light") then
-                light.Shadows = false -- Disable shadows for each light source
-            end
-        end
-  	end    
-})
-
-Tab:AddButton({
-	Name = "Eagles Stadium",
-	Callback = function()
-        local Players = game:GetService("Players")
-        local ws = game:GetService("Workspace")
-        
-        -- Asset ID of the new model you want to replace the stadium with
-        local newModelAssetId = "17071455135"
-        
-        -- Function to replace the stadium model
-        local function replaceStadiumModel()
-            -- Get the stadium model
-            local stadium = ws.Models.Stadium
-        
-            -- Remove the existing stadium model
-            stadium:Destroy()
-        
-            -- Load the new model using the asset ID
-            local newModel = game:GetObjects("rbxassetid://" .. newModelAssetId)[1]
-        
-            -- Place the new model in the workspace
-            newModel.Parent = ws.Models
-            newModel.Name = "Stadium"
-        end
-        
-        -- Call the function to replace the stadium model
-        replaceStadiumModel()
-        
-        -- Get the Lighting service
-        local Lighting = game:GetService("Lighting")
-        
-        -- Disable shadows for all light sources
-        local lights = game.Workspace:GetDescendants()
-        for _, light in ipairs(lights) do
-            if light:IsA("Light") then
-                light.Shadows = false -- Disable shadows for each light source
-            end
-        end
-  	end    
-})
-
-Tab:AddButton({
-	Name = "Staduim Lighting",
+	Name = "Environment",
 	Callback = function()
       		OrionLib:MakeNotification({
-	Name = "HAYDEN A MEANIE",
-	Content = "There is nothing here hayden gave me a non working script",
+	Name = "Script not added",
+	Content = "Currently it's not added, but maybe soon this will be a stadium or the actual environment.",
 	Image = "rbxassetid://4483345998",
 	Time = 5
 })
@@ -751,10 +661,10 @@ Tab:AddButton({
 })
 
 local Section = Tab:AddSection({
-	Name = "Skycam's"
+	Name = "Camera Systems (Not working with Solara)"
 })
 Tab:AddButton({
-    Name = "AutoCamera",
+    Name = "Auto Camera",
     Callback = function()
         local renderstep = game:GetService("RunService").RenderStepped
 
@@ -910,7 +820,7 @@ Tab:AddButton({
 })
 
 Tab:AddButton({
-    Name = "Brodcast Camrea",
+    Name = "Broadcast Camera",
     Callback = function()
         local renderstep = game:GetService("RunService").RenderStepped
 
@@ -1239,7 +1149,49 @@ end
   	end    
 })
 
+Tab:AddButton({
+	Name = "Ambient (for dark stadiums)",
+	Callback = function()
+local Lighting = game:GetService("Lighting")
 
+Lighting.Ambient = Color3.fromRGB(255, 255, 255)
+  	end    
+})
+						
+Tab:AddButton({
+	Name = "Field Decals (ask @aidanzworld to update)",
+	Callback = function()
+local endZone1Grass = game:GetService("Workspace").Models.Field.Grass.Endzone.One
+local endZoneOneDecal = Instance.new("Decal", endZone1Grass)
+
+local endZone2Grass = game:GetService("Workspace").Models.Field.Grass.Endzone.Two
+local endZoneTwoDecal = Instance.new("Decal", endZone2Grass)
+
+-- TEAM ONE ENDZONE COLOR + LOGO
+endZone1Grass.Color = Color3.fromRGB(0, 51, 160)
+endZoneOneDecal.Face = Enum.NormalId.Top
+endZoneOneDecal.Texture = "rbxassetid://17799501216"
+
+if endZone1Grass:FindFirstChild("SurfaceGui") then
+    endZone1Grass.SurfaceGui:Destroy()
+end
+
+-- TEAM TWO ENDZONE COLOR + LOGO
+endZone2Grass.Color = Color3.fromRGB(253, 181, 21)
+endZoneTwoDecal.Face = Enum.NormalId.Top
+endZoneTwoDecal.Texture = "rbxassetid://17799615397"
+
+if endZone2Grass:FindFirstChild("SurfaceGui") then
+    endZone2Grass.SurfaceGui:Destroy()
+end
+
+local middleLogo = game:GetService("Workspace").Models.Field.Grass.Normal.Mid.SurfaceGui.ImageLabel
+middleLogo.Image = "rbxassetid://17799582315"
+middleLogo.ImageTransparency = 0
+middleLogo.ScaleType = Enum.ScaleType.Fit
+  	end    
+})
+						
 -- HCBB
 
 local Tab = Window:MakeTab({
