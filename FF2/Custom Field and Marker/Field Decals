@@ -1,0 +1,28 @@
+local endZone1Grass = game:GetService("Workspace").Models.Field.Grass.Endzone.One
+local endZoneOneDecal = Instance.new("Decal", endZone1Grass)
+
+local endZone2Grass = game:GetService("Workspace").Models.Field.Grass.Endzone.Two
+local endZoneTwoDecal = Instance.new("Decal", endZone2Grass)
+
+-- TEAM ONE ENDZONE COLOR + LOGO
+endZone1Grass.Color = Color3.fromRGB(0, 51, 160)
+endZoneOneDecal.Face = Enum.NormalId.Top
+endZoneOneDecal.Texture = "rbxassetid://17799501216"
+
+if endZone1Grass:FindFirstChild("SurfaceGui") then
+    endZone1Grass.SurfaceGui:Destroy()
+end
+
+-- TEAM TWO ENDZONE COLOR + LOGO
+endZone2Grass.Color = Color3.fromRGB(253, 181, 21)
+endZoneTwoDecal.Face = Enum.NormalId.Top
+endZoneTwoDecal.Texture = "rbxassetid://17799615397"
+
+if endZone2Grass:FindFirstChild("SurfaceGui") then
+    endZone2Grass.SurfaceGui:Destroy()
+end
+
+local middleLogo = game:GetService("Workspace").Models.Field.Grass.Normal.Mid.SurfaceGui.ImageLabel
+middleLogo.Image = "rbxassetid://17799582315"
+middleLogo.ImageTransparency = 0
+middleLogo.ScaleType = Enum.ScaleType.Fit
