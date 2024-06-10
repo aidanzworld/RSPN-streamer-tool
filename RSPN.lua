@@ -496,7 +496,7 @@ local mainGui = playerGui:WaitForChild("MainGui")
 local scoreboard = mainGui:WaitForChild("Scoreboard")
 local Message = scoreboard.Parent:WaitForChild("Message")
         
-        s.Position = UDim2.new(1, 0, -0.02, 0)
+        scoreboard.Position = UDim2.new(1, 0, -0.02, 0)
         
         local fileName = "LFG-FF.csv"
         
