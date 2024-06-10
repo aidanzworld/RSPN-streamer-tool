@@ -15,7 +15,7 @@ local Section = Tab:AddSection({
 Name = <string> - The name of the section.
 ]]
 Tab:AddButton({
-	Name = "Anti-Ban (NOT WORKING)",
+	Name = "Anti-Ban (Update TBD)",
 	Callback = function()
         repeat wait() until game:IsLoaded()
         print('Initialized')
@@ -485,22 +485,28 @@ local Section = Tab:AddSection({
 })
 
 Tab:AddButton({
-	Name = "Scorebug Reader (CSV)",
+	Name = "Clock Sync (CSV)",
 	Callback = function()
-        local s = game.Players.LocalPlayer.PlayerGui.MainGui:FindFirstChild("Scoreboard")
-        local Message = s.Parent.Message
+        local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+
+local localPlayer = Players.LocalPlayer
+local playerGui = localPlayer:WaitForChild("PlayerGui")
+local mainGui = playerGui:WaitForChild("MainGui")
+local scoreboard = mainGui:WaitForChild("Scoreboard")
+local Message = scoreboard.Parent:WaitForChild("Message")
         
         s.Position = UDim2.new(1, 0, -0.02, 0)
         
         local fileName = "LFG-FF.csv"
         
         local function updateData()
-            local clock = s.Clock.Text
-            local pclock = s.Playclock.TextLabel.Text
-            local status = s.Status.Text
-            local homescore = s.HomeScore.TextLabel.Text
-            local awayscore = s.AwayScore.TextLabel.Text
-            local fgYards = tonumber(s.Yardline.Text) + 17
+            local clock = scoreboard.Clock.Text
+            local pclock = scoreboard.Playclock.TextLabel.Text
+            local status = scoreboard.Status.Text
+            local homescore = scoreboard.HomeScore.TextLabel.Text
+            local awayscore = scoreboard.AwayScore.TextLabel.Text
+            local fgYards = tonumber(scoreboard.Yardline.Text) + 17
             local yardline = Message.Text
         
             local data = string.format("%s,%s,%s,%s,%s,%s\n", clock, pclock, status, homescore, awayscore, yardline, fgYards)
@@ -526,71 +532,77 @@ Tab:AddButton({
             end
         end)
         
-        s.Clock:GetPropertyChangedSignal("Text"):Connect(updateData)
-        s.Yardline:GetPropertyChangedSignal("Text"):Connect(updateData)
-        s.Status:GetPropertyChangedSignal("Text"):Connect(updateData)
-        s.Playclock.TextLabel:GetPropertyChangedSignal("Text"):Connect(updateData)
-        s.HomeScore.TextLabel:GetPropertyChangedSignal("Text"):Connect(updateData)
-        s.AwayScore.TextLabel:GetPropertyChangedSignal("Text"):Connect(updateData)
+        scoreboard.Clock:GetPropertyChangedSignal("Text"):Connect(updateData)
+        scoreboard.Yardline:GetPropertyChangedSignal("Text"):Connect(updateData)
+        scoreboard.Status:GetPropertyChangedSignal("Text"):Connect(updateData)
+        scoreboard.Playclock.TextLabel:GetPropertyChangedSignal("Text"):Connect(updateData)
+        scoreboard.HomeScore.TextLabel:GetPropertyChangedSignal("Text"):Connect(updateData)
+        scoreboard.AwayScore.TextLabel:GetPropertyChangedSignal("Text"):Connect(updateData)
         
   	end    
 })
 
 Tab:AddButton({
-	Name = "Scorebug Reader (TXT)",
+	Name = "Clock Sync (TXT)",
 	Callback = function()
-        local s = game.Players.LocalPlayer.PlayerGui.MainGui:FindFirstChild("Scoreboard")
-        local Message = s.Parent.Message
-        
-        s.Position = UDim2.new(1, 0, -0.02, 0)
-        
-        local function writeData(fileName, data)
-            writefile(fileName, data)
-        end
-        
-        local function updateData()
-            local clock = s.Clock.Text
-            local pclock = s.Playclock.TextLabel.Text
-            local status = s.Status.Text
-            local homescore = s.HomeScore.TextLabel.Text
-            local awayscore = s.AwayScore.TextLabel.Text
-            local fgYards = tonumber(s.Yardline.Text) + 17
-            local yardline = Message.Text
-        
-            writeData("clock.txt", clock)
-            writeData("pclock.txt", pclock)
-            writeData("status.txt", status)
-            writeData("homescore.txt", homescore)
-            writeData("awayscore.txt", awayscore)
-            writeData("fgYards.txt", tostring(fgYards))
-            writeData("yardline.txt", yardline)
-        end
-        
-        updateData()
-        
-        game.RunService.Stepped:Connect(function()
-            Message.Font = Enum.Font.JosefinSans
-            Message.TextColor3 = Color3.fromRGB(255, 255, 255)
-            Message.TextScaled = false
-            Message.TextSize = 65.000
-            Message.TextWrapped = true
-            Message.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
-        
-            local Logo = Message.Parent.Transition.NameLogo
-            local Replay = Message.Parent.Transition.Message
-        
-            Logo.ImageColor3 = Color3.fromRGB(155, 0, 255)
-            if Message.Parent:FindFirstChild("ReplayDetails") then
-                Message.Parent.ReplayDetails:Destroy()
-            end
-        end)
-        
-        s.Clock:GetPropertyChangedSignal("Text"):Connect(updateData)
-        s.Yardline:GetPropertyChangedSignal("Text"):Connect(updateData)
-        s.Status:GetPropertyChangedSignal("Text"):Connect(updateData)
-        s.Playclock.TextLabel:GetPropertyChangedSignal("Text"):Connect(updateData)
-        s.HomeScore.TextLabel:GetPropertyChangedSignal("Text"):Connect(updateData)
-        s.AwayScore.TextLabel:GetPropertyChangedSignal("Text"):Connect(updateData)
+        local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+
+local localPlayer = Players.LocalPlayer
+local playerGui = localPlayer:WaitForChild("PlayerGui")
+local mainGui = playerGui:WaitForChild("MainGui")
+local scoreboard = mainGui:WaitForChild("Scoreboard")
+local Message = scoreboard.Parent:WaitForChild("Message")
+
+scoreboard.Position = UDim2.new(1, 0, -0.02, 0)
+
+local function writeData(fileName, data)
+    writefile(fileName, data)
+end
+
+local function updateData()
+    local clock = scoreboard.Clock.Text
+    local pclock = scoreboard.Playclock.TextLabel.Text
+    local status = scoreboard.Status.Text
+    local homescore = scoreboard.HomeScore.TextLabel.Text
+    local awayscore = scoreboard.AwayScore.TextLabel.Text
+    local fgYards = tonumber(scoreboard.Yardline.Text) + 17
+    local yardline = Message.Text
+
+    writeData("clock.txt", clock)
+    writeData("pclock.txt", pclock)
+    writeData("status.txt", status)
+    writeData("homescore.txt", homescore)
+    writeData("awayscore.txt", awayscore)
+    writeData("fgYards.txt", tostring(fgYards))
+    writeData("yardline.txt", yardline)
+end
+
+updateData()
+
+RunService.Stepped:Connect(function()
+    Message.Font = Enum.Font.JosefinSans
+    Message.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Message.TextScaled = false
+    Message.TextSize = 65.000
+    Message.TextWrapped = true
+    Message.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+
+    local Logo = Message.Parent.Transition.NameLogo
+    local Replay = Message.Parent.Transition.Message
+
+    Logo.ImageColor3 = Color3.fromRGB(155, 0, 255)
+    if Message.Parent:FindFirstChild("ReplayDetails") then
+        Message.Parent.ReplayDetails:Destroy()
+    end
+end)
+
+scoreboard.Clock:GetPropertyChangedSignal("Text"):Connect(updateData)
+scoreboard.Yardline:GetPropertyChangedSignal("Text"):Connect(updateData)
+scoreboard.Status:GetPropertyChangedSignal("Text"):Connect(updateData)
+scoreboard.Playclock.TextLabel:GetPropertyChangedSignal("Text"):Connect(updateData)
+scoreboard.HomeScore.TextLabel:GetPropertyChangedSignal("Text"):Connect(updateData)
+scoreboard.AwayScore.TextLabel:GetPropertyChangedSignal("Text"):Connect(updateData)
   	end    
 })
 
