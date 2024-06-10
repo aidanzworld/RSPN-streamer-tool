@@ -1,0 +1,123 @@
+local oldStatus = "none"
+local oldScrimmage = 0
+local arrow = ">"
+local part = Instance.new("Part",game:GetService("Workspace"))
+local surfaceGUI = Instance.new("SurfaceGui",part)
+local textLabel = Instance.new("TextLabel",surfaceGUI)
+local meshPart = Instance.new("MeshPart",game:GetService("Workspace"))
+local meshOutline = Instance.new("MeshPart",game:GetService("Workspace"))
+
+
+-- Set Home Team Colors
+
+local homeTeamMain = "#000000"
+local homeTeamOutline = "#000000"
+
+-- Set Away Team Colors
+
+local awayTeamMain = "#000000"
+local awayTeamOutline = "#000000"
+
+
+
+repeat wait() until game:IsLoaded()
+part.Anchored = true
+part.Position = Vector3.new(-27, 2.8, 25)
+part.Size = Vector3.new(40, 1, 40)
+part.Transparency = 1
+part.Rotation = Vector3.new(0, 0, 0)
+surfaceGUI.Face = 1
+surfaceGUI.CanvasSize = Vector2.new(200, 200)
+textLabel.Parent = surfaceGUI
+textLabel.Text = "1st & 15 >"
+textLabel.TextSize = 25
+textLabel.Font = 4
+textLabel.Rotation = 0
+textLabel.TextColor3 = Color3.fromHex("#000000")
+textLabel.Size = UDim2.new(1, 0, 1, 0)
+textLabel.BackgroundTransparency = 1
+textLabel.TextTransparency = 0.3
+
+meshPart.MeshId = "rbxassetid://8237126683"
+meshPart.Size = Vector3.new(2, 1.2, 1.6)
+meshPart.Position = Vector3.new(24, 3.1, 25)
+meshPart.Anchored = true
+meshPart.BrickColor = BrickColor.new (Color3.fromHex("#000000"))
+meshPart.Transparency = 0.5
+meshPart.CastShadow = false
+meshPart.Reflectance = 0
+meshPart.Rotation = Vector3.new(0, 0, 0)
+
+meshOutline.MeshId = "rbxassetid://8237953613"
+meshOutline.Size = Vector3.new(2, 1.2, 1.6)
+meshOutline.Position = Vector3.new(0, 3.1, 25)
+meshOutline.Anchored = true
+meshOutline.BrickColor = BrickColor.new (Color3.fromHex("#000000"))
+meshOutline.Transparency = 0.5
+meshOutline.CastShadow = false
+meshOutline.Reflectance = 0
+
+while wait(1) do
+	homeTeamOutline = game:GetService("Players").LocalPlayer.PlayerGui.MainGui.Scoreboard.Home.BackgroundColor3
+	awayTeamOutline = game:GetService("Players").LocalPlayer.PlayerGui.MainGui.Scoreboard.Away.BackgroundColor3
+--if (game:GetService("Workspace").LineDown.Transparency == 0) then
+   -- textLabel.TextTransparency = 0
+if (game:GetService("Players").LocalPlayer.PlayerGui.MainGui.Scoreboard.Status.Text ~= oldStatus) then
+    oldStatus = game:GetService("Players").LocalPlayer.PlayerGui.MainGui.Scoreboard.Status.Text
+    if (game:GetService("Workspace").LineDown.Position.Z > game:GetService("Workspace").LineTogo.Position.Z) then
+        arrow = ">"
+    else
+        arrow = "<"
+   end
+    if (arrow == "<") then
+    textLabel.Text = game:GetService("Players").LocalPlayer.PlayerGui.MainGui.Scoreboard.Status.Text
+    meshPart.Rotation = Vector3.new(0, 0, 0)
+    meshOutline.Rotation = Vector3.new(0, 0, 0)
+    else
+    textLabel.Text = game:GetService("Players").LocalPlayer.PlayerGui.MainGui.Scoreboard.Status.Text
+    meshPart.Rotation = Vector3.new(0, 180, 0)
+    meshOutline.Rotation = Vector3.new(0, 180, 0)
+    end
+
+    if (game:GetService("Players").LocalPlayer.PlayerGui.MainGui.Scoreboard.Status.Text == "KICKOFF") then
+        textLabel.TextTransparency = 1
+        meshPart.Transparency = 1
+        meshOutline.Transparency = 1
+    else
+        textLabel.TextTransparency = 0.5
+        meshPart.Transparency = 0.5
+        meshOutline.Transparency = 0.7
+    end
+    x = string.sub(oldStatus,1,3)
+
+
+
+	if (x == "4th") then
+		meshOutline.BrickColor = BrickColor.new (Color3.fromHex("#FF0000"))
+		textLabel.TextColor3 = Color3.fromHex("#FF0000")
+	else
+		meshOutline.BrickColor = BrickColor.new (Color3.fromHex("#000000"))
+		textLabel.TextColor3 = Color3.fromHex("#FFFFFF")
+	end
+end
+if (game:GetService("Players").LocalPlayer.PlayerGui.MainGui.Scoreboard.Home.Poss.Visible == true) then
+    	print("test")
+    	meshPart.BrickColor = BrickColor.new (Color3.fromHex("#000000"))
+    	meshOutline.BrickColor = BrickColor.new (homeTeamOutline)
+    else
+    print("test222")
+		meshPart.BrickColor = BrickColor.new (Color3.fromHex("#000000"))
+    	meshOutline.BrickColor = BrickColor.new (awayTeamOutline)
+	end
+if (game:GetService("Workspace").LineDown.Position.Z ~= oldScrimmage) then
+    print("not equal")
+    oldScrimmage = game:GetService("Workspace").LineDown.Position.Z
+    part.Position = Vector3.new(25, 2.8, game:GetService("Workspace").LineDown.Position.Z)
+    meshPart.Position = Vector3.new(25, 3.1, game:GetService("Workspace").LineDown.Position.Z)
+    meshOutline.Position = Vector3.new(25, 3.1, game:GetService("Workspace").LineDown.Position.Z)
+end
+--else
+  -- print("test")
+  --  textLabel.TextTransparency = 1
+--end
+end
