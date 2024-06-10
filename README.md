@@ -9,14 +9,11 @@ This repository hosts the code for the RSPN Streamer Tool, an innovative solutio
 - **Customization:** Tailor the tool to suit your unique streaming style with configurable settings and themes.
 
 ## Getting Started:
-1. **Load the Script:** Copy the following loadstring and execute it in your preferred Roblox executor (recommend currently Solara or Wave):
-    ```lua
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/aidanzworld/RSPN-streamer-tool/main/RSPN.lua"))()
-    ```
+1. **Load the Scripts:** Copy the following scripts in the folders and execute it in your preferred Roblox executor (recommend currently Solara or Wave):
 
-2. **Explore and Configure:** Once the UI is loaded, feel free to select any script you may want to use depending on what game you are streaming.
+2. **Explore and Configure:** Feel free to select any script you may want to use depending on what game you are streaming.
 
-3. **Engage and Stream:** Use the tool to help with production on the stream and enjoy a seamless streaming experience with the RSPN Streamer Tool at your disposal.
+3. **Engage and Stream:** Use the tools to help with production on the stream and enjoy a seamless streaming experience with the RSPN Streamer Tool at your disposal.
 
 ## Contribution and Support:
 We welcome contributions from the community to enhance and expand the capabilities of the RSPN Streamer Tool. Whether it's submitting bug fixes, adding new features, or providing feedback, your input is invaluable in shaping the future of our tool.
@@ -27,9 +24,7 @@ Join us in revolutionizing the Ro-Sports streaming landscape with the RSPN Strea
 
 ## YouTube Tutorial
 
-Check out our YouTube tutorial for a visual guide on how to use the RSPN Streamer Tool:
-
-[![YouTube Tutorial](https://img.youtube.com/vi/HGeYv3WvhwI/0.jpg)](https://www.youtube.com/watch?v=HGeYv3WvhwI)
+To be updated.
 
 
 ## MIT License
