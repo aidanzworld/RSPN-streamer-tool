@@ -1,6 +1,6 @@
 local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
 local Window = OrionLib:MakeWindow({Name = "RSPN'S Streamer Tool", HidePremium = false, SaveConfig = false, ConfigFolder = "RSPN", IntroEnabled = true, IntroText = "RSPN", IntroIcon = "https://cdn.discordapp.com/attachments/1196998381495668826/1214713220972027955/RSPN_New_BW.png?ex=65fa1cd8&is=65e7a7d8&hm=f36983cb2c51723946740aae9d09e8880ccc3122d6760b1a826499ee4c3f3572&", Icon = "https://cdn.discordapp.com/attachments/1196998381495668826/1214713220972027955/RSPN_New_BW.png?ex=65fa1cd8&is=65e7a7d8&hm=f36983cb2c51723946740aae9d09e8880ccc3122d6760b1a826499ee4c3f3572&"})
- 
+
 --Football Fusion
 local Tab = Window:MakeTab({
 	Name = "Football Fusion",
@@ -21,7 +21,7 @@ Tab:AddButton({
         print('Initialized')
         if game.PlaceId == 8204899140 then
             local Players = game:GetService("Players")
-        
+
             --local NewHash = ""
             --local CurrentHash = ""
             local UpdatedVersion = 212
@@ -48,7 +48,7 @@ Tab:AddButton({
                     [5] = 771 --// [number]
                 } --// table: 0x000000008053a989 [table]
             } --// table: 0x0000000043132109 [table]
-            
+
             --[[local Booleans = {  --// Detection Booleans
                 [1] = false; --// Metatable (Sequence) Indexing
                 [2] = false; --// Checks for illegal images in coregui?
@@ -75,7 +75,7 @@ Tab:AddButton({
                 [21] = false; --// Changing Gravity
                 [22] = false; --// Seems to control if parts of the ac is disabled? (true = disable, false = enable)
             }]]
-            
+
             local BooleanIndex = {
                 [1] = 17;
                 [2] = 19;
@@ -102,7 +102,7 @@ Tab:AddButton({
                 [21] = 43;
                 [22] = 18;
             }
-            
+
             local BoolReasons = {
                 [1] = "Metatable (Sequence) Indexing";
                 [2] = "Illegal Image in CoreGui";
@@ -129,30 +129,30 @@ Tab:AddButton({
                 [21] = "Gravity Modification";
                 [22] = "AC Disabled";
             }
-            
+
             local CurrentBools;
             local SequenceLinks = {}
             local MainFunction;
-            
+
             local BlacklistNumber = Random.new():NextNumber(-9e5, 9e5)
-            
+
             local _DEBUGGING = false
             local RemoteEvent;
             local ReadyForExecution = false
             local ProblemEncountered = false
             local BypassVerified = false
-            
+
             if getgenv().BypassInitiated then
                 return;
             end
-            
+
             getgenv().BypassInitiated = true
-            
+
             local function UpdateBools()
                 local Upvalues = getupvalues(MainFunction)
-            
+
                 CurrentBools = {}
-            
+
                 for i, v in next, BooleanIndex do
                     if Upvalues[v] ~= nil then
                         CurrentBools[i] = Upvalues[v]
@@ -162,130 +162,130 @@ Tab:AddButton({
                     end
                 end
             end
-            
+
             local function GetLinkedSequence(Sequence, Function)
                 if not MainFunction then
                     return;
                 end
-            
+
                 local SeqHash = 1;
-            
+
                 for _, v in next, Sequence do
                     SeqHash *= v
                 end
-            
+
                 if Function == MainFunction then
                     return "AC Fail-Safe" --// Main ac function is trying to ban us, it's a fail-safe triggered by (a) boolean(s) being true
                 end
-            
+
                 if SequenceLinks[SeqHash] then
                     return (BoolReasons[SequenceLinks[SeqHash]] or "Unknown") .. " (Cached)"
                 end
-            
+
                 local DiffBool;
                 local Upvalues = getupvalues(MainFunction)
-            
+
                 local NewBools = {}
-            
+
                 for i, v in next, BooleanIndex do
                     NewBools[i] = Upvalues[v]
                 end
-            
+
                 for i, v in next, NewBools do
                     if v ~= CurrentBools[i] then
                         DiffBool = i
                     end
                 end
-            
+
                 local LinkedSequence = BoolReasons[DiffBool] or "Unknown"
-            
+
                 if DiffBool then
                     setupvalue(MainFunction, BooleanIndex[DiffBool], CurrentBools[DiffBool])
                 end
-            
+
                 SequenceLinks[SeqHash] = DiffBool or 0/0;
                 CurrentBools = NewBools
-            
+
                 return LinkedSequence
             end
-            
+
             local function Debug(Method, ...)
                 if _DEBUGGING then
                     getgenv()[Method](...)
                 end
             end
-            
+
             local FormatTable = function()
                 return;
             end
-            
+
             if _DEBUGGING then
                 FormatTable = loadstring(game:HttpGet("https://raw.githubusercontent.com/NoTwistedHere/Roblox/main/FormatTable.lua"))() --// FormatTable :)
             end
-            
+
             local function IsValidSequence(Sequence)
                 for _, v in next, WhitelistedSeq do
                     local Valid = 0
-            
+
                     for i, k in next, v do
                         if Sequence[i] == k then
                             Valid += 1
                         end
                     end
-            
+
                     if Valid == 5 then
                         return true
                     end
                 end
-            
+
                 return false
             end
-            
+
             local function SetMetatable(Meta)
                 local Func = getrawmetatable(Meta).__call
                 local FEnv = getrawmetatable(getfenv(Func)).__index
-            
+
                 setreadonly(FEnv.debug, false)
-            
+
                 FEnv.debug.info = function() --// SW is bitch for this
                     return "You're a faggot of a LocalScript" --// Bypass caller check
                 end
-            
+
                 setreadonly(FEnv.debug, true)
-            
+
                 local HookedAt = os.clock()
                 local Logging;
                 local LogCount = 0
                 local CompletedCycles = 0
-            
+
                 getrawmetatable(Meta).__call = function(...)
                     local Arguments = {...}
                     local Table = table.remove(Arguments, 1) --// self
                     local Caller = getinfo(2).func
-            
+
                     if not CurrentBools then
                         local CallerInfo = getinfo(Caller)
-            
+
                         if CallerInfo.numparams == 3 and CallerInfo.nups > 40 and CallerInfo.is_vararg == 0 then
                             MainFunction = Caller
                             UpdateBools()
                         end
                     end
-            
+
                     if not IsValidSequence(Arguments) then
                         if (os.clock() - HookedAt < 1 or #WhitelistedSeq == 0) and not Logging and CompletedCycles == 0 and not ProblemEncountered and not ReadyForExecution then --// Most likely the ac has updated
                             Debug("warn", "[AUTO UPDATING BYPASS SEQUENCES] - STARTING")
-            
+
                             Logging = true
                             WhitelistedSeq = {}
                         end
-            
+
                         if not Logging then
                             Debug("warn", "Blocked: ", FormatTable({
                                 ["Suspected Ban Reason"] = GetLinkedSequence(Arguments, getinfo(2).func);
                                 ["Sequence"] = Arguments;
                             }))
-            
+
                             return BlacklistNumber
                         else
                             if Caller == MainFunction then
@@ -297,34 +297,34 @@ Tab:AddButton({
                         end
                     elseif Logging then
                         LogCount += 1
-            
+
                         if LogCount >= #WhitelistedSeq then --// This should only take a few cycles
                             CompletedCycles += 1
-            
+
                             if CompletedCycles > 2 then
                                 Debug("warn", "[AUTO UPDATING BYPASS SEQUENCES] - COMPLETE")
-            
+
                                 Logging = false
                             end
                         elseif CompletedCycles > 0 then
                             CompletedCycles -= 1
                         end
                     end
-            
+
                     if not Logging then
                         ReadyForExecution = true
                     end
-            
+
                     --Debug("print", "not blocked", FormatTable(Arguments))
-            
+
                     return Func(...)
                 end
             end
-            
+
             repeat
                 task.wait()
             until Players.LocalPlayer and Players.LocalPlayer.Character
-            
+
             task.delay(8, function() --// If the bypass hasn't successfully executed by now, kick the player or shutdown the game
                 if not ReadyForExecution and not ProblemEncountered then
                     if not ProblemEncountered then
@@ -333,7 +333,7 @@ Tab:AddButton({
                     end
                 end
             end)
-            
+
             --[[local function GetGameHash(Function)
                 local Source = getinfo(Function).source
                 local Raw = ""
@@ -358,72 +358,72 @@ Tab:AddButton({
             
                 return Hash(Raw)
             end]]
-            
+
             for _, v in next, getconnections(Players.LocalPlayer.Character.ChildAdded) do --// Loop through connections and grab the upper level character detections func
                 if v.Function then
                     local FInfo = getinfo(v.Function)
-                    
+
                     if FInfo.nups == 9 then
                         --// Party
-            
+
                         --[[NewHash = GetGameHash(v.Function)
             
                         if NewHash ~= CurrentHash then
                             Debug("warn", "Game has updated, updating bypass")
                             WhitelistedSeq = {}
                         end]]
-            
+
                         if game.PlaceVersion ~= UpdatedVersion then
                             Debug("warn", "Game has updated, updating bypass")
                             WhitelistedSeq = {}
                         else
                             Debug("warn", "Game has NOT updated")
                         end
-            
+
                         RemoteEvent = getupvalue(v.Function, 8) --// Ban RE
                         SetMetatable(getupvalue(v.Function, 9)) --// new_mt :>)
-            
+
                         Debug("warn", "Grabbed RemoteEvent & Metatable")
                     end
                 end
             end
-            
+
             --// Hook FireServer & block blacklisted sequences from firing
-            
+
             local OldHook; OldHook = hookfunction(RemoteEvent.fireServer, function(...) --// Hook FireServer (fireServer & FireServer direct to the same function)
                 local Arguments = {...}
                 local self = table.remove(Arguments, 1)
-            
+
                 if typeof(self) == "Instance" and self == RemoteEvent and type(Arguments[1]) == "string" and Arguments[1]:sub(1, 2) == "AC" then
                     Debug("print", "FireServer request", FormatTable(Arguments))
-            
+
                     for _, v in next, Arguments do
                         if (type(v) == "number" and v == BlacklistNumber) or (type(v) == "string" and v == "error") then
                             Debug("warn", "BLACKLISTED SEQ TRIED TO RUN")
-            
+
                             return; --// Block blacklisted sequences from being sent
                         end
                     end
-            
+
                     Debug("print", "FireServer sent", FormatTable(Arguments))
                 end
-            
+
                 return OldHook(...)
             end)
-            
+
             local OldNamecall; OldNamecall = hookmetamethod(game, "__namecall", function(...)
                 local Arguments = {...}
                 local self = table.remove(Arguments, 1)
                 local Method = getnamecallmethod()
-            
+
                 if (Method == "FireServer" or Method == "fireServer") and typeof(self) == "Instance" and self == RemoteEvent and type(Arguments[1]) == "string" and Arguments[1]:sub(1, 2) == "AC" then
                     Debug("print", "FireServer request", FormatTable(Arguments))
-            
+
                     if not BypassVerified then
                         if not Arguments[2] then
                             Debug("warn", "Arguments[2] is nil, this is a problem")
                             ProblemEncountered = true
-                            
+
                             pcall(function()
                                 task.spawn(messagebox, "A problem has been encountered while trying to bypass. Please report this error message to the developers:\nTBP:BVF-AG2N", "Problem Encountered", 1)
                                 game:Shutdown()
@@ -432,41 +432,41 @@ Tab:AddButton({
                             BypassVerified = true
                         end
                     end
-            
+
                     for _, v in next, Arguments do
                         if (type(v) == "number" and v == BlacklistNumber) or (type(v) == "string" and v == "error") then
                             Debug("warn", "BLACKLISTED SEQ TRIED TO RUN")
-            
+
                             return; --// Block blacklisted sequences from being sent
                         end
                     end
-            
+
                     Debug("print", "FireServer sent", FormatTable(Arguments))
                 end
-            
+
                 return OldNamecall(...)
             end)
-            
+
             local OldDelay; OldDelay = hookfunction(delay, function(...) --// 'WhY uSe ElIpSeS iNsTeAd Of PaRaMs' - 1) stfu 2) to prevent scripts from intentionally causing an error (some errors can be caused by using defined params)
                 local _, Function = ...
-            
+
                 if type(Function) == "function" and getinfo(Function).source:match("PlayerModule.LocalScript") then
                     return; --// Block the function from being called
                 end
-            
+
                 return OldDelay(...)
             end)
-            
+
             repeat
                 task.wait()
             until ReadyForExecution
-            
+
             repeat
                 task.wait()
             until BypassVerified
-            
+
             Debug("warn", "[READY FOR EXECUTION]")
-            
+
             if _DEBUGGING then
                 Debug("warn", "Dumping sequences & current hash to clipboard")
                 setclipboard(FormatTable({
@@ -475,10 +475,10 @@ Tab:AddButton({
                     PlaceVersion = game.PlaceVersion;
                 }))
             end
-        
+
             getgenv().AC_BYPASS_DONE = true
         end
-  	end    
+  	end
 })
 local Section = Tab:AddSection({
 	Name = "Scorebug"
@@ -495,11 +495,11 @@ local playerGui = localPlayer:WaitForChild("PlayerGui")
 local mainGui = playerGui:WaitForChild("MainGui")
 local scoreboard = mainGui:WaitForChild("Scoreboard")
 local Message = scoreboard.Parent:WaitForChild("Message")
-        
+
         scoreboard.Position = UDim2.new(1, 0, -0.02, 0)
-        
+
         local fileName = "LFG-FF.csv"
-        
+
         local function updateData()
             local clock = scoreboard.Clock.Text
             local pclock = scoreboard.Playclock.TextLabel.Text
@@ -508,13 +508,13 @@ local Message = scoreboard.Parent:WaitForChild("Message")
             local awayscore = scoreboard.AwayScore.TextLabel.Text
             local fgYards = tonumber(scoreboard.Yardline.Text) + 17
             local yardline = Message.Text
-        
+
             local data = string.format("%s,%s,%s,%s,%s,%s\n", clock, pclock, status, homescore, awayscore, yardline, fgYards)
             writefile(fileName, data)
         end
-        
+
         updateData()
-        
+
         game.RunService.Stepped:Connect(function()
             Message.Font = Enum.Font.JosefinSans
             Message.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -522,24 +522,24 @@ local Message = scoreboard.Parent:WaitForChild("Message")
             Message.TextSize = 65.000
             Message.TextWrapped = true
             Message.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
-        
+
             local Logo = Message.Parent.Transition.NameLogo
             local Replay = Message.Parent.Transition.Message
-        
+
             Logo.ImageColor3 = Color3.fromRGB(155, 0, 255)
             if Message.Parent:FindFirstChild("ReplayDetails") then
                 Message.Parent.ReplayDetails:Destroy()
             end
         end)
-        
+
         scoreboard.Clock:GetPropertyChangedSignal("Text"):Connect(updateData)
         scoreboard.Yardline:GetPropertyChangedSignal("Text"):Connect(updateData)
         scoreboard.Status:GetPropertyChangedSignal("Text"):Connect(updateData)
         scoreboard.Playclock.TextLabel:GetPropertyChangedSignal("Text"):Connect(updateData)
         scoreboard.HomeScore.TextLabel:GetPropertyChangedSignal("Text"):Connect(updateData)
         scoreboard.AwayScore.TextLabel:GetPropertyChangedSignal("Text"):Connect(updateData)
-        
-  	end    
+
+  	end
 })
 
 Tab:AddButton({
@@ -603,7 +603,7 @@ scoreboard.Status:GetPropertyChangedSignal("Text"):Connect(updateData)
 scoreboard.Playclock.TextLabel:GetPropertyChangedSignal("Text"):Connect(updateData)
 scoreboard.HomeScore.TextLabel:GetPropertyChangedSignal("Text"):Connect(updateData)
 scoreboard.AwayScore.TextLabel:GetPropertyChangedSignal("Text"):Connect(updateData)
-  	end    
+  	end
 })
 
 --[[
@@ -615,7 +615,7 @@ local Section = Tab:AddSection({
 	Name = "Stadiums"
 })
 
-Tab:AddButton({
+Tab{
 	Name = "XFG Championship 20 Stadium (for slang)",
 	Callback = function()
 -- Replace these values with your actual asset ID
@@ -645,8 +645,8 @@ local function replaceStadiumWithAsset()
 end
 
 -- Call the function to replace Stadium with the selected asset
-replaceStadiumWithAsset()  
-})
+replaceStadiumWithAsset()
+}
 
 Tab:AddButton({
 	Name = "Environment",
@@ -657,7 +657,7 @@ Tab:AddButton({
 	Image = "rbxassetid://4483345998",
 	Time = 5
 })
-  	end    
+  	end
 })
 
 local Section = Tab:AddSection({
@@ -675,38 +675,38 @@ Tab:AddButton({
         Health = true,
         PlayerList = true,
         }
-        
+
         local screenGuis = {}
-        
+
         local setCores = {
         BadgesNotificationsActive = true,
         PointsNotificationsActive = true,
         }
-        
+
         local StarterGui = game:GetService("StarterGui")
-        
-        
+
+
         print("test")
-        
+
         local cam = workspace.CurrentCamera
         local player = game:GetService("Players").LocalPlayer
         local FocusPart = game:GetService("ReplicatedStorage").Values.Ball.Value
         local focusPartFar
         local focusPartFov
         local enabled = false
-        
+
         local position = Vector3.new(0, 70, -320)
-        
+
         renderstep:connect(function()
         if (enabled == true) then
         FocusPart = game:GetService("ReplicatedStorage").Values.Ball.Value
-        
-        
-        
+
+
+
         if (FocusPart ~= nil) then
         focusPartFar = (position - FocusPart.Position).Magnitude
-        
-        
+
+
         focusPartFov = (50-((focusPartFar/10)*2))+(FocusPart.Position.Y/1.7)
         if (focusPartFov < 7) then
             focusPartFov = 7
@@ -721,12 +721,12 @@ Tab:AddButton({
         cam.FieldOfView = focusPartFov
         end
         end
-        
+
         end
         end)
-        
+
         game.Players.LocalPlayer:GetMouse().KeyDown:Connect(function(key)
-            
+
             if key == "1" then
                 position = Vector3.new(0, 70, -320)
             end
@@ -750,17 +750,17 @@ Tab:AddButton({
             end
             if key == "8" then
                 position = Vector3.new(0, 40, -75)
-            end				
-            
+            end
+
         end)
-        
-        
+
+
         game.Players.LocalPlayer:GetMouse().KeyDown:Connect(function(key)
-            
+
             if key == "z" then
                 if (enabled == true) then
                     enabled = false
-                    
+
                     local playergui = game:GetService("Players").LocalPlayer.PlayerGui
                     if playergui then
                     for _, gui in pairs(screenGuis) do
@@ -770,26 +770,26 @@ Tab:AddButton({
                     end
                     end
                     end
-                    
+
                     for name in pairs(setCores) do
                     setCores[name] = StarterGui:GetCore(name)
                     StarterGui:SetCore(name, true)
                     end
-                    
+
                     for name in pairs(coreGuis) do
                     coreGuis[name] = StarterGui:GetCoreGuiEnabled(Enum.CoreGuiType[name])
                     StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType[name], true)
                     end
-                    
+
                     cam.CameraSubject = game:GetService("Players").LocalPlayer.Character.Humanoid
                     cam.CameraType = "Custom"
                     cam.CFrame = game:GetService("Players").LocalPlayer.Character.Head.CFrame
                     cam.FieldOfView = 70
-                    
+
                 else
-                
+
                     enabled = true
-                    
+
                     local playergui = game:GetService("Players").LocalPlayer.PlayerGui
                     if playergui then
                     for _, gui in pairs(playergui:GetChildren()) do
@@ -799,23 +799,23 @@ Tab:AddButton({
                     end
                     end
                     end
-                    
+
                     for name in pairs(setCores) do
                     setCores[name] = StarterGui:GetCore(name)
                     StarterGui:SetCore(name, false)
                     end
-                    
+
                     for name in pairs(coreGuis) do
                     coreGuis[name] = StarterGui:GetCoreGuiEnabled(Enum.CoreGuiType[name])
                     StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType[name], false)
                     end
-                    
+
                 end
-                
+
             end
-            
+
         end)
-        
+
       end
 })
 
@@ -831,36 +831,36 @@ Tab:AddButton({
         Health = true,
         PlayerList = true,
         }
-        
+
         local screenGuis = {}
-        
+
         local setCores = {
         BadgesNotificationsActive = true,
         PointsNotificationsActive = true,
         }
-        
+
         local prePlayFOV = 0
         local prePlayZoom
         local inPlayZoom
         local oldStatus = game:GetService("ReplicatedStorage").Values.Status.Value
         local StarterGui = game:GetService("StarterGui")
-        
-        
+
+
         print("test")
-        
+
         local cam = workspace.CurrentCamera
         local player = game:GetService("Players").LocalPlayer
         local FocusPart = game:GetService("ReplicatedStorage").Values.Ball.Value
         local focusPartFar
         local focusPartFov
         local enabled = false
-        
+
         local position = Vector3.new(-180, 60, 0)
-        
+
         renderstep:connect(function()
         if (game:GetService("ReplicatedStorage").Values.Status.Value ~= oldStatus) then
-            
-            
+
+
             if (game:GetService("ReplicatedStorage").Values.YardTag.Value < 25) then
                 if (game:GetService("Workspace").LineTogo.Position.Z > 0) then
                     position = Vector3.new(-180, 60, 75)
@@ -870,8 +870,8 @@ Tab:AddButton({
             else
                 position = Vector3.new(-180, 60, 0)
             end
-            
-            
+
+
             print("not equal")
             oldStatus = game:GetService("ReplicatedStorage").Values.Status.Value
             print(oldStatus)
@@ -888,9 +888,9 @@ Tab:AddButton({
                     wait(0.2)
                 until (prePlayZoom == false)
             end
-            
+
         end
-        
+
         if (prePlayZoom == true) then
             prePlayFOV = prePlayFOV-0.01
             if (prePlayFOV <= 10) then
@@ -898,7 +898,7 @@ Tab:AddButton({
                 prePlayFOV = 10
             end
         end
-        
+
         if (inPlayZoom == true) then
             prePlayFOV = prePlayFOV-0.01
             if (prePlayFOV <= 0) then
@@ -906,19 +906,19 @@ Tab:AddButton({
                 prePlayFOV = 0
             end
         end
-        
+
         print(prePlayFOV)
-        
-        
+
+
         if (enabled == true) then
         FocusPart = game:GetService("ReplicatedStorage").Values.Ball.Value
-        
-        
-        
+
+
+
         if (FocusPart ~= nil) then
         focusPartFar = (position - FocusPart.Position).Magnitude
-        
-        
+
+
         focusPartFov = (50-((focusPartFar/10)*2))+(FocusPart.Position.Y/1.7)+prePlayFOV
         if (focusPartFov < 7) then
             focusPartFov = 7
@@ -933,17 +933,17 @@ Tab:AddButton({
         cam.FieldOfView = focusPartFov
         end
         end
-        
+
         end
         end)
-        
-        
+
+
         game.Players.LocalPlayer:GetMouse().KeyDown:Connect(function(key)
-            
+
             if key == "z" then
                 if (enabled == true) then
                     enabled = false
-                    
+
                     local playergui = game:GetService("Players").LocalPlayer.PlayerGui
                     if playergui then
                     for _, gui in pairs(screenGuis) do
@@ -953,26 +953,26 @@ Tab:AddButton({
                     end
                     end
                     end
-                    
+
                     for name in pairs(setCores) do
                     setCores[name] = StarterGui:GetCore(name)
                     StarterGui:SetCore(name, true)
                     end
-                    
+
                     for name in pairs(coreGuis) do
                     coreGuis[name] = StarterGui:GetCoreGuiEnabled(Enum.CoreGuiType[name])
                     StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType[name], true)
                     end
-                    
+
                     cam.CameraSubject = game:GetService("Players").LocalPlayer.Character.Humanoid
                     cam.CameraType = "Custom"
                     cam.CFrame = game:GetService("Players").LocalPlayer.Character.Head.CFrame
                     cam.FieldOfView = 70
-                    
+
                 else
-                
+
                     enabled = true
-                    
+
                     local playergui = game:GetService("Players").LocalPlayer.PlayerGui
                     if playergui then
                     for _, gui in pairs(playergui:GetChildren()) do
@@ -982,23 +982,23 @@ Tab:AddButton({
                     end
                     end
                     end
-                    
+
                     for name in pairs(setCores) do
                     setCores[name] = StarterGui:GetCore(name)
                     StarterGui:SetCore(name, false)
                     end
-                    
+
                     for name in pairs(coreGuis) do
                     coreGuis[name] = StarterGui:GetCoreGuiEnabled(Enum.CoreGuiType[name])
                     StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType[name], false)
                     end
-                    
+
                 end
-                
+
             end
-            
+
         end)
-        
+
       end
 })
 
@@ -1022,7 +1022,7 @@ local Section = Tab:AddSection({
 Tab:AddButton({
 	Name = "Marker",
 	Callback = function()
-      		
+
 local oldStatus = "none"
 local oldScrimmage = 0
 local arrow = ">"
@@ -1099,11 +1099,11 @@ if (game:GetService("Players").LocalPlayer.PlayerGui.MainGui.Scoreboard.Status.T
     meshPart.Rotation = Vector3.new(0, 0, 0)
     meshOutline.Rotation = Vector3.new(0, 0, 0)
     else
-    textLabel.Text = game:GetService("Players").LocalPlayer.PlayerGui.MainGui.Scoreboard.Status.Text 
+    textLabel.Text = game:GetService("Players").LocalPlayer.PlayerGui.MainGui.Scoreboard.Status.Text
     meshPart.Rotation = Vector3.new(0, 180, 0)
     meshOutline.Rotation = Vector3.new(0, 180, 0)
     end
-    
+
     if (game:GetService("Players").LocalPlayer.PlayerGui.MainGui.Scoreboard.Status.Text == "KICKOFF") then
         textLabel.TextTransparency = 1
         meshPart.Transparency = 1
@@ -1112,18 +1112,18 @@ if (game:GetService("Players").LocalPlayer.PlayerGui.MainGui.Scoreboard.Status.T
         textLabel.TextTransparency = 0.5
         meshPart.Transparency = 0.5
         meshOutline.Transparency = 0.7
-    end  
+    end
     x = string.sub(oldStatus,1,3)
-    	
-    
-    
+
+
+
 	if (x == "4th") then
 		meshOutline.BrickColor = BrickColor.new (Color3.fromHex("#FF0000"))
 		textLabel.TextColor3 = Color3.fromHex("#FF0000")
 	else
 		meshOutline.BrickColor = BrickColor.new (Color3.fromHex("#000000"))
 		textLabel.TextColor3 = Color3.fromHex("#FFFFFF")
-	end			
+	end
 end
 if (game:GetService("Players").LocalPlayer.PlayerGui.MainGui.Scoreboard.Home.Poss.Visible == true) then
     	print("test")
@@ -1140,13 +1140,13 @@ if (game:GetService("Workspace").LineDown.Position.Z ~= oldScrimmage) then
     part.Position = Vector3.new(25, 2.8, game:GetService("Workspace").LineDown.Position.Z)
     meshPart.Position = Vector3.new(25, 3.1, game:GetService("Workspace").LineDown.Position.Z)
     meshOutline.Position = Vector3.new(25, 3.1, game:GetService("Workspace").LineDown.Position.Z)
-end    
+end
 --else
   -- print("test")
   --  textLabel.TextTransparency = 1
 --end
 end
-  	end    
+  	end
 })
 
 Tab:AddButton({
@@ -1155,9 +1155,9 @@ Tab:AddButton({
 local Lighting = game:GetService("Lighting")
 
 Lighting.Ambient = Color3.fromRGB(255, 255, 255)
-  	end    
+  	end
 })
-						
+
 Tab:AddButton({
 	Name = "Field Decals (ask @aidanzworld to update)",
 	Callback = function()
@@ -1189,9 +1189,9 @@ local middleLogo = game:GetService("Workspace").Models.Field.Grass.Normal.Mid.Su
 middleLogo.Image = "rbxassetid://17799582315"
 middleLogo.ImageTransparency = 0
 middleLogo.ScaleType = Enum.ScaleType.Fit
-  	end    
+  	end
 })
-						
+
 -- HCBB
 
 local Tab = Window:MakeTab({
@@ -1344,7 +1344,7 @@ end
 updateOutsInCSV()
 
 
-  	end    
+  	end
 })
 
 Tab:AddButton({
@@ -1371,8 +1371,8 @@ function updateBasesInCSV()
     local third = base.BaseOuts.Base.B3.Visible
 
     local csvContent = "First,Second,Third\n"
-        .. getEmojiFromVisibility(first) .. "," 
-        .. getEmojiFromVisibility(second) .. "," 
+        .. getEmojiFromVisibility(first) .. ","
+        .. getEmojiFromVisibility(second) .. ","
         .. getEmojiFromVisibility(third)
 
     -- Write to a CSV file locally
@@ -1396,7 +1396,7 @@ end
 
 updateGame() -- Call updateGame initially to start updating bases
 
-  	end    
+  	end
 })
 
 
@@ -1440,7 +1440,7 @@ while wait(1) do
     local BatterOPS2 = base1.ScoreBoard.Board.SG.F.B2.Stats.OPS.Amount.Num.Text
     local BatterAVG2 = base1.ScoreBoard.Board.SG.F.B2.Stats.BA.Amount.Num.Text
     local Batter2 = base1.ScoreBoard.Board.SG.F.B2.PlayerInfo.Nam.Title.Text
-    
+
     -- Remove "." from RBI section
     BatterRBI = BatterRBI:gsub("%.", "")
     BatterRBI2 = BatterRBI2:gsub("%.", "")
@@ -1455,7 +1455,7 @@ while wait(1) do
 end
 
 updateGame() -- Call updateGame initially to start updating counts
-  	end    
+  	end
 })
 
 
@@ -1508,7 +1508,7 @@ function updateGame()
 end
 
 updateGame() -- Call updateGame initially to start updating counts
-  	end    
+  	end
 })
 
 
@@ -1522,7 +1522,7 @@ Tab:AddButton({
         repeat wait() until game:IsLoaded()
 
         local base1 = game:GetService("Workspace")
-        
+
         -- Create file names for each column
         local fileNames = {
             "HomeScore.txt",
@@ -1542,7 +1542,7 @@ Tab:AddButton({
             "BatterOPS2.txt",
             "BatterAVG2.txt"
         }
-        
+
         while wait(1) do
             local homeScore = base1.ScoreBoard.Board.SG.F.Score.Home.Score.Text
             local awayScore = base1.ScoreBoard.Board.SG.F.Score.Away.Score.Text
@@ -1560,11 +1560,11 @@ Tab:AddButton({
             local BatterOPS2 = base1.ScoreBoard.Board.SG.F.B2.Stats.OPS.Amount.Num.Text
             local BatterAVG2 = base1.ScoreBoard.Board.SG.F.B2.Stats.BA.Amount.Num.Text
             local Batter2 = base1.ScoreBoard.Board.SG.F.B2.PlayerInfo.Nam.Title.Text
-            
+
             -- Remove "." from RBI section
             BatterRBI = BatterRBI:gsub("%.", "")
             BatterRBI2 = BatterRBI2:gsub("%.", "")
-        
+
             -- Write data to corresponding files
             for i, fileName in ipairs(fileNames) do
                 local data
@@ -1603,14 +1603,14 @@ Tab:AddButton({
                 end
                 writefile(fileName, data, "w")  -- Use "w" to overwrite the file
             end
-            
+
             print("Stats written to TXT files")
-        
+
             game.Players.LocalPlayer.PlayerGui.Scoreboard.Enabled = false
             game.Players.LocalPlayer.PlayerGui.SettingsGui.Enabled = false
             game.Players.LocalPlayer.PlayerGui.PlayerInfo.Enabled = false
         end
-  	end    
+  	end
 })
 
 
@@ -1624,7 +1624,7 @@ Tab:AddButton({
         local previousBallCount = 0 -- Initialize previous ball count
         local previousStrikeCount = 0 -- Initialize previous strike count
         local isHomePitch = true -- Variable to track whether it's home pitch or away pitch
-        
+
         -- Function to update the counts based on visibility
         local function updateCountsBasedOnVisibility(ballCount, strikeCount)
             -- Update pitch counter only when the ball or strike count changes
@@ -1636,21 +1636,21 @@ Tab:AddButton({
                     awayPitchCounter = awayPitchCounter + 1
                     print("Away pitch count updated to " .. awayPitchCounter) -- Debug statement
                 end
-        
+
                 -- Update previous counts
                 previousBallCount = ballCount
                 previousStrikeCount = strikeCount
-        
+
                 -- Write data to corresponding files
                 local pitchCount = isHomePitch and homePitchCounter or awayPitchCounter
                 writefile("BallCount.txt", tostring(ballCount), "w")
                 writefile("StrikeCount.txt", tostring(strikeCount), "w")
                 writefile("PitchCount.txt", tostring(pitchCount), "w")
-                
+
                 print("Counts written to TXT files")
             end
         end
-        
+
         -- Function to handle key presses
         local function onKeyDown(input)
             if input.KeyCode == Enum.KeyCode.P then
@@ -1680,41 +1680,41 @@ Tab:AddButton({
                     print("Switched to Away pitch count") -- Debug statement
                 end
             end
-        
+
             updateCountsBasedOnVisibility(previousBallCount, previousStrikeCount) -- Update counts instantly
         end
-        
+
         -- Connect the key down event
         game:GetService("UserInputService").InputBegan:Connect(onKeyDown)
-        
+
         -- This function should be called regularly, for example, in your game update loop
         local function updateGame()
             local ballCount = 0
             local strikeCount = 0
-        
+
             -- Update ball count based on visibility
             for i = 1, 3 do
                 if base.Count.Balls[i].Visible then
                     ballCount = ballCount + 1
                 end
             end
-        
+
             -- Update strike count based on visibility
             for i = 1, 2 do
                 if base.Count.Strikes[i].Visible then
                     strikeCount = strikeCount + 1
                 end
             end
-        
+
             updateCountsBasedOnVisibility(ballCount, strikeCount)
         end
-        
+
         while true do
             updateGame()
             wait(1) -- Adjust this interval based on your preference
         end
-        
-  	end    
+
+  	end
 })
 
 --[[
@@ -1730,18 +1730,18 @@ Tab:AddButton({
                 wait()
             until game:IsLoaded()
         end
-        
+
         waitUntilGameLoaded()
-        
+
         local base = game.Players.LocalPlayer.PlayerGui.Scoreboard.ScoreHolder.Scoreboard
-        
+
         print("working")
-        
+
         -- Function to get the total number of outs
         local function getTotalOuts()
             local out1 = base.Count.Outs[1].Visible
             local out2 = base.Count.Outs[2].Visible
-        
+
             if out1 and out2 then
                 return 2
             elseif out1 or out2 then
@@ -1750,25 +1750,25 @@ Tab:AddButton({
                 return 0
             end
         end
-        
+
         -- Function to update the outs in the TXT files
         function updateOutsInTXT()
             while true do
                 local totalOuts = getTotalOuts()
-        
+
                 -- Write data to corresponding files
                 writefile("Outs.txt", tostring(totalOuts), "w")
-        
+
                 print("Outs written to TXT file")
-        
+
                 wait(1) -- Adjust this interval based on your preference
             end
         end
-        
+
         -- Call the function to start updating the TXT files
         updateOutsInTXT()
-        
-  	end    
+
+  	end
 })
 
 --[[
@@ -1791,16 +1791,16 @@ Tab:AddButton({
 
         local ReplicatedStorage = game:GetService("ReplicatedStorage")
         local Player = game:GetService("Players").LocalPlayer
-        
+
         local SharedUtil = require(ReplicatedStorage:WaitForChild("Modules"):WaitForChild("SharedUtil"))
         local IsLeague = SharedUtil.GSettings.Game == "League"
-        
+
         local PlayerGui = Player:WaitForChild("PlayerGui")
-        local base1 = nil 
-        
+        local base1 = nil
+
         if IsLeague then
             base1 = PlayerGui:WaitForChild("ScoreboardUI"):WaitForChild("Scoreboard")
-        else 
+        else
             base1 = PlayerGui:WaitForChild("Main"):WaitForChild("Scoreboard")
         end
         if not base1 then
@@ -1808,24 +1808,24 @@ Tab:AddButton({
             return
         end
         local fileName = "LFG-BASKETBALL.csv"
-        
+
         -- Add column names to the CSV file
         writefile(fileName, "HomeScore,AwayScore,Quarter,ShotClock,Clock\n")
-        
+
         while wait(1) do
             local homeScore = base1.Home.Score.Text
             local awayScore = base1.Away.Score.Text
             local Quarter = base1.Info.Quarter.Text
             local ShotClock = base1.Info.ShotClock.Text
             local Clock = base1.Info.Clock.Text
-        
+
             local data = string.format("HomeScore,AwayScore,Quarter,ShotClock,Clock\n%s,%s,%s,%s,%s\n", homeScore, awayScore, Quarter, ShotClock, Clock)
             writefile(fileName, data, "a")  -- Use "a" to append to the file instead of overwriting
             print("Stats written to CSV")
-        
+
             base1.Visible = false
         end
-  	end    
+  	end
 })
 
 Tab:AddButton({
@@ -1835,24 +1835,24 @@ Tab:AddButton({
 
         local ReplicatedStorage = game:GetService("ReplicatedStorage")
         local Player = game:GetService("Players").LocalPlayer
-        
+
         local SharedUtil = require(ReplicatedStorage:WaitForChild("Modules"):WaitForChild("SharedUtil"))
         local IsLeague = SharedUtil.GSettings.Game == "League"
-        
+
         local PlayerGui = Player:WaitForChild("PlayerGui")
-        local base1 = nil 
-        
+        local base1 = nil
+
         if IsLeague then
             base1 = PlayerGui:WaitForChild("ScoreboardUI"):WaitForChild("Scoreboard")
-        else 
+        else
             base1 = PlayerGui:WaitForChild("Main"):WaitForChild("Scoreboard")
         end
-        
+
         if not base1 then
             warn("Scoreboard frame not found.")
             return
         end
-        
+
         -- Define file names for each column
         local fileNames = {
             "HomeScore.txt",
@@ -1861,7 +1861,7 @@ Tab:AddButton({
             "ShotClock.txt",
             "Clock.txt"
         }
-        
+
         -- Function to write data to TXT files
         local function writeDataToTXT()
             while wait(1) do
@@ -1870,7 +1870,7 @@ Tab:AddButton({
                 local Quarter = base1.Info.Quarter.Text
                 local ShotClock = base1.Info.ShotClock.Text
                 local Clock = base1.Info.Clock.Text
-        
+
                 -- Write data to corresponding files
                 for i, fileName in ipairs(fileNames) do
                     local data
@@ -1887,14 +1887,14 @@ Tab:AddButton({
                     end
                     writefile(fileName, data, "w")  -- Use "w" to overwrite the file
                 end
-        
+
                 print("Stats written to TXT files")
             end
         end
-        
+
         -- Call the function to start updating the TXT files
         writeDataToTXT()
-  	end    
+  	end
 })
 
 --[[
@@ -1937,7 +1937,7 @@ end
 
 -- Call the function to replace Stadium with the selected asset
 replaceArenaWithAsset()
-  	end    
+  	end
 })
 
 
@@ -1972,7 +1972,7 @@ end
 
 -- Call the function to replace Stadium with the selected asset
 replaceCourtWithAsset()
-  	end    
+  	end
 })
 
 --[[
@@ -1992,7 +1992,7 @@ Tab:AddButton({
               v.Enabled = false
             end
           end
-  	end    
+  	end
 })
 
 
@@ -2075,50 +2075,50 @@ Tab:AddButton({
 
         local player = game.Players.LocalPlayer
         local base = player.PlayerGui.Standings_Gui.Lap
-        
+
         -- Function to convert RGB to HEX
         local function rgbToHex(r, g, b)
             r, g, b = math.floor(r * 255), math.floor(g * 255), math.floor(b * 255)
-        
+
             local function toHex(c)
                 local hex = string.format("%X", c)
                 return #hex == 1 and "0" .. hex or hex
             end
-        
+
             return "#" .. toHex(r) .. toHex(g) .. toHex(b)
         end
-        
+
         -- Function to write data to CSV file
         local function writeDataToCSV(lap, rgbColor)
             local hexColor = rgbToHex(rgbColor.r, rgbColor.g, rgbColor.b)
             local csvContent = "Lap,FlagColor\n" .. lap .. "," .. hexColor .. "\n"
-        
+
             local success, errorMessage = pcall(function()
                 writefile("lap_data.csv", csvContent)
                 print("CSV file updated.")
             end)
-        
+
             if not success then
                 warn("Failed to write CSV file:", errorMessage)
             end
         end
-        
+
         while wait(1) do
             local lap = base.Value.Text
             local back = base.Flag.BackgroundColor3
-        
+
             -- Write lap and flag color data to CSV
             writeDataToCSV(lap, back)
-        
+
             print("Lap:", lap)
             print("Flag Color (RGB):", back.r, back.g, back.b)
             print("Flag Color (HEX):", rgbToHex(back.r, back.g, back.b))
-        
+
             game.Players.LocalPlayer.PlayerGui.Standings_Gui.Standings.Visible = false
         game.Players.LocalPlayer.PlayerGui.Standings_Gui.Control.Visible = false
         game.Players.LocalPlayer.PlayerGui.Standings_Gui.Lap.Visible = false
         end
-  	end    
+  	end
 })
 
 local Tab = Window:MakeTab({
@@ -2138,42 +2138,42 @@ Tab:AddButton({
 
         local ReplicatedStorage = game:GetService("ReplicatedStorage")
         local Player = game:GetService("Players").LocalPlayer
-        
+
         local SharedUtil = require(ReplicatedStorage:WaitForChild("Modules"):WaitForChild("SharedUtil"))
         local IsLeague = SharedUtil.GSettings.Game == "League"
-        
+
         local PlayerGui = Player:WaitForChild("PlayerGui")
-        local base1 = nil 
-        
+        local base1 = nil
+
         if IsLeague then
             base1 = PlayerGui:WaitForChild("ScoreboardUI"):WaitForChild("Scoreboard")
-        else 
+        else
             base1 = PlayerGui:WaitForChild("Main"):WaitForChild("Scoreboard")
         end
-        
+
         if not base1 then
             warn("Scoreboard frame not found.")
             return
         end
-        
+
         -- Disable all ScreenGui elements in the player's PlayerGui
         for i, v in pairs(PlayerGui:GetChildren()) do
             if v:IsA("ScreenGui") then
                 v.Enabled = false
             end
         end
-        
+
         while wait(1) do
             local homeScore = base1.Score.HomeScore.Text
             local awayScore = base1.Score.AwayScore.Text
             local timer = base1.Timer.Text
-        
+
             local data = string.format("HomeScore: %s, AwayScore: %s, Timer: %s", homeScore, awayScore, timer)
             print("Stats: " .. data)
-        
+
             base1.Visible = false
         end
-  	end    
+  	end
 })
 
 Tab:AddButton({
@@ -2183,45 +2183,45 @@ Tab:AddButton({
 
         local ReplicatedStorage = game:GetService("ReplicatedStorage")
         local Player = game:GetService("Players").LocalPlayer
-        
+
         local SharedUtil = require(ReplicatedStorage:WaitForChild("Modules"):WaitForChild("SharedUtil"))
         local IsLeague = SharedUtil.GSettings.Game == "League"
-        
+
         local PlayerGui = Player:WaitForChild("PlayerGui")
-        local base1 = nil 
-        
+        local base1 = nil
+
         if IsLeague then
             base1 = PlayerGui:WaitForChild("ScoreboardUI"):WaitForChild("Scoreboard")
-        else 
+        else
             base1 = PlayerGui:WaitForChild("Main"):WaitForChild("Scoreboard")
         end
-        
+
         if not base1 then
             warn("Scoreboard frame not found.")
             return
         end
-        
+
         -- Disable all ScreenGui elements in the player's PlayerGui
         for i, v in pairs(PlayerGui:GetChildren()) do
             if v:IsA("ScreenGui") then
                 v.Enabled = false
             end
         end
-        
+
         -- Define file names for each column
         local fileNames = {
             "HomeScore.txt",
             "AwayScore.txt",
             "Timer.txt"
         }
-        
+
         -- Function to write data to TXT files
         local function writeDataToTXT()
             while wait(1) do
                 local homeScore = base1.Score.HomeScore.Text
                 local awayScore = base1.Score.AwayScore.Text
                 local timer = base1.Timer.Text
-        
+
                 -- Write data to corresponding files
                 for i, fileName in ipairs(fileNames) do
                     local data
@@ -2234,14 +2234,14 @@ Tab:AddButton({
                     end
                     writefile(fileName, data, "w")  -- Use "w" to overwrite the file
                 end
-        
+
                 print("Stats written to TXT files")
             end
         end
-        
+
         -- Call the function to start updating the TXT files
         writeDataToTXT()
-  	end    
+  	end
 })
 
 --[[
@@ -2284,7 +2284,7 @@ end
 
 -- Call the function to replace Stadium with the selected asset
 replaceArenaWithAsset()
-  	end    
+  	end
 })
 
 Tab:AddButton({
@@ -2323,7 +2323,7 @@ function sandbox(var,func)
     LocalScript0.Name = "FreeCamera"
     LocalScript0.Parent = mas
     table.insert(cors,sandbox(LocalScript0,function()
-    
+
     local pi    = math.pi
     local abs   = math.abs
     local clamp = math.clamp
@@ -2332,19 +2332,19 @@ function sandbox(var,func)
     local sign  = math.sign
     local sqrt  = math.sqrt
     local tan   = math.tan
-    
+
     local ContextActionService = game:GetService("ContextActionService")
     local Players = game:GetService("Players")
     local RunService = game:GetService("RunService")
     local StarterGui = game:GetService("StarterGui")
     local UserInputService = game:GetService("UserInputService")
-    
+
     local LocalPlayer = Players.LocalPlayer
     if not LocalPlayer then
     Players:GetPropertyChangedSignal("LocalPlayer"):Wait()
     LocalPlayer = Players.LocalPlayer
     end
-    
+
     local Camera = workspace.CurrentCamera
     workspace:GetPropertyChangedSignal("CurrentCamera"):Connect(function()
     local newCamera = workspace.CurrentCamera
@@ -2352,28 +2352,28 @@ function sandbox(var,func)
     Camera = newCamera
     end
     end)
-    
+
     ------------------------------------------------------------------------
-    
+
     local TOGGLE_INPUT_PRIORITY = Enum.ContextActionPriority.Low.Value
     local INPUT_PRIORITY = Enum.ContextActionPriority.High.Value
     local FREECAM_MACRO_KB = {Enum.KeyCode.LeftShift, Enum.KeyCode.P}
-    
+
     local NAV_GAIN = Vector3.new(1, 1, 1)*64
     local PAN_GAIN = Vector2.new(0.75, 1)*8
     local FOV_GAIN = 300
-    
+
     local PITCH_LIMIT = rad(90)
-    
+
     local VEL_STIFFNESS = 1.5
     local PAN_STIFFNESS = 1.0
     local FOV_STIFFNESS = 4.0
-    
+
     ------------------------------------------------------------------------
-    
+
     local Spring = {} do
     Spring.__index = Spring
-    
+
     function Spring.new(freq, pos)
     local self = setmetatable({}, Spring)
     self.f = freq
@@ -2381,60 +2381,60 @@ function sandbox(var,func)
     self.v = pos*0
     return self
     end
-    
+
     function Spring:Update(dt, goal)
     local f = self.f*2*pi
     local p0 = self.p
     local v0 = self.v
-    
+
     local offset = goal - p0
     local decay = exp(-f*dt)
-    
+
     local p1 = goal + (v0*dt - offset*(f*dt + 1))*decay
     local v1 = (f*dt*(offset*f - v0) + v0)*decay
-    
+
     self.p = p1
     self.v = v1
-    
+
     return p1
     end
-    
+
     function Spring:Reset(pos)
     self.p = pos
     self.v = pos*0
     end
     end
-    
+
     ------------------------------------------------------------------------
-    
+
     local cameraPos = Vector3.new()
     local cameraRot = Vector2.new()
     local cameraFov = 0
-    
+
     local velSpring = Spring.new(VEL_STIFFNESS, Vector3.new())
     local panSpring = Spring.new(PAN_STIFFNESS, Vector2.new())
     local fovSpring = Spring.new(FOV_STIFFNESS, 0)
-    
+
     ------------------------------------------------------------------------
-    
+
     local Input = {} do
     local thumbstickCurve do
     local K_CURVATURE = 2.0
     local K_DEADZONE = 0.15
-    
+
     local function fCurve(x)
     return (exp(K_CURVATURE*x) - 1)/(exp(K_CURVATURE) - 1)
     end
-    
+
     local function fDeadzone(x)
     return fCurve((x - K_DEADZONE)/(1 - K_DEADZONE))
     end
-    
+
     function thumbstickCurve(x)
     return sign(x)*clamp(fDeadzone(abs(x)), 0, 1)
     end
     end
-    
+
     local gamepad = {
     ButtonX = 0,
     ButtonY = 0,
@@ -2445,7 +2445,7 @@ function sandbox(var,func)
     Thumbstick1 = Vector2.new(),
     Thumbstick2 = Vector2.new(),
     }
-    
+
     local keyboard = {
     W = 0,
     A = 0,
@@ -2464,12 +2464,12 @@ function sandbox(var,func)
     LeftShift = 0,
     RightShift = 0,
     }
-    
+
     local mouse = {
     Delta = Vector2.new(),
     MouseWheel = 0,
     }
-    
+
     local NAV_GAMEPAD_SPEED  = Vector3.new(1, 1, 1)
     local NAV_KEYBOARD_SPEED = Vector3.new(1, 1, 1)
     local PAN_MOUSE_SPEED    = Vector2.new(1, 1)*(pi/64)
@@ -2478,29 +2478,29 @@ function sandbox(var,func)
     local FOV_GAMEPAD_SPEED  = 0.25
     local NAV_ADJ_SPEED      = 0.75
     local NAV_SHIFT_MUL      = 0.25
-    
+
     local navSpeed = 1
-    
+
     function Input.Vel(dt)
     navSpeed = clamp(navSpeed + dt*(keyboard.Up - keyboard.Down)*NAV_ADJ_SPEED, 0.01, 4)
-    
+
     local kGamepad = Vector3.new(
     thumbstickCurve(gamepad.Thumbstick1.x),
     thumbstickCurve(gamepad.ButtonR2) - thumbstickCurve(gamepad.ButtonL2),
     thumbstickCurve(-gamepad.Thumbstick1.y)
     )*NAV_GAMEPAD_SPEED
-    
+
     local kKeyboard = Vector3.new(
     keyboard.D - keyboard.A + keyboard.K - keyboard.H,
     keyboard.E - keyboard.Q + keyboard.I - keyboard.Y,
     keyboard.S - keyboard.W + keyboard.J - keyboard.U
     )*NAV_KEYBOARD_SPEED
-    
+
     local shift = UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) or UserInputService:IsKeyDown(Enum.KeyCode.RightShift)
-    
+
     return (kGamepad + kKeyboard)*(navSpeed*(shift and NAV_SHIFT_MUL or 1))
     end
-    
+
     function Input.Pan(dt)
     local kGamepad = Vector2.new(
     thumbstickCurve(gamepad.Thumbstick2.y),
@@ -2510,52 +2510,52 @@ function sandbox(var,func)
     mouse.Delta = Vector2.new()
     return kGamepad + kMouse
     end
-    
+
     function Input.Fov(dt)
     local kGamepad = (gamepad.ButtonX - gamepad.ButtonY)*FOV_GAMEPAD_SPEED
     local kMouse = mouse.MouseWheel*FOV_WHEEL_SPEED
     mouse.MouseWheel = 0
     return kGamepad + kMouse
     end
-    
+
     do
     local function Keypress(action, state, input)
     keyboard[input.KeyCode.Name] = state == Enum.UserInputState.Begin and 1 or 0
     return Enum.ContextActionResult.Sink
     end
-    
+
     local function GpButton(action, state, input)
     gamepad[input.KeyCode.Name] = state == Enum.UserInputState.Begin and 1 or 0
     return Enum.ContextActionResult.Sink
     end
-    
+
     local function MousePan(action, state, input)
     local delta = input.Delta
     mouse.Delta = Vector2.new(-delta.y, -delta.x)
     return Enum.ContextActionResult.Sink
     end
-    
+
     local function Thumb(action, state, input)
     gamepad[input.KeyCode.Name] = input.Position
     return Enum.ContextActionResult.Sink
     end
-    
+
     local function Trigger(action, state, input)
     gamepad[input.KeyCode.Name] = input.Position.z
     return Enum.ContextActionResult.Sink
     end
-    
+
     local function MouseWheel(action, state, input)
     mouse[input.UserInputType.Name] = -input.Position.z
     return Enum.ContextActionResult.Sink
     end
-    
+
     local function Zero(t)
     for k, v in pairs(t) do
     t[k] = v*0
     end
     end
-    
+
     function Input.StartCapture()
     ContextActionService:BindActionAtPriority("FreecamKeyboard", Keypress, false, INPUT_PRIORITY,
     Enum.KeyCode.W, Enum.KeyCode.U,
@@ -2572,7 +2572,7 @@ function sandbox(var,func)
     ContextActionService:BindActionAtPriority("FreecamGamepadTrigger",    Trigger,    false, INPUT_PRIORITY, Enum.KeyCode.ButtonR2, Enum.KeyCode.ButtonL2)
     ContextActionService:BindActionAtPriority("FreecamGamepadThumbstick", Thumb,      false, INPUT_PRIORITY, Enum.KeyCode.Thumbstick1, Enum.KeyCode.Thumbstick2)
     end
-    
+
     function Input.StopCapture()
     navSpeed = 1
     Zero(gamepad)
@@ -2587,7 +2587,7 @@ function sandbox(var,func)
     end
     end
     end
-    
+
     local function GetFocusDistance(cameraFrame)
     local znear = 0.1
     local viewport = Camera.ViewportSize
@@ -2596,10 +2596,10 @@ function sandbox(var,func)
     local fx = cameraFrame.rightVector
     local fy = cameraFrame.upVector
     local fz = cameraFrame.lookVector
-    
+
     local minVect = Vector3.new()
     local minDist = 512
-    
+
     for x = 0, 1, 0.5 do
     for y = 0, 1, 0.5 do
     local cx = (x - 0.5)*projx
@@ -2614,33 +2614,33 @@ function sandbox(var,func)
     end
     end
     end
-    
+
     return fz:Dot(minVect)*minDist
     end
-    
+
     ------------------------------------------------------------------------
-    
+
     local function StepFreecam(dt)
     local vel = velSpring:Update(dt, Input.Vel(dt))
     local pan = panSpring:Update(dt, Input.Pan(dt))
     local fov = fovSpring:Update(dt, Input.Fov(dt))
-    
+
     local zoomFactor = sqrt(tan(rad(70/2))/tan(rad(cameraFov/2)))
-    
+
     cameraFov = clamp(cameraFov + fov*FOV_GAIN*(dt/zoomFactor), 1, 120)
     cameraRot = cameraRot + pan*PAN_GAIN*(dt/zoomFactor)
     cameraRot = Vector2.new(clamp(cameraRot.x, -PITCH_LIMIT, PITCH_LIMIT), cameraRot.y%(2*pi))
-    
+
     local cameraCFrame = CFrame.new(cameraPos)*CFrame.fromOrientation(cameraRot.x, cameraRot.y, 0)*CFrame.new(vel*NAV_GAIN*dt)
     cameraPos = cameraCFrame.p
-    
+
     Camera.CFrame = cameraCFrame
     Camera.Focus = cameraCFrame*CFrame.new(0, 0, -GetFocusDistance(cameraCFrame))
     Camera.FieldOfView = cameraFov
     end
-    
+
     ------------------------------------------------------------------------
-    
+
     local PlayerState = {} do
     local mouseIconEnabled
     local cameraSubject
@@ -2659,7 +2659,7 @@ function sandbox(var,func)
     BadgesNotificationsActive = true,
     PointsNotificationsActive = true,
     }
-    
+
     -- Save state and set up for freecam
     function PlayerState.Push()
     for name in pairs(coreGuis) do
@@ -2679,26 +2679,26 @@ function sandbox(var,func)
     end
     end
     end
-    
+
     cameraFieldOfView = Camera.FieldOfView
     Camera.FieldOfView = 70
-    
+
     cameraType = Camera.CameraType
     Camera.CameraType = Enum.CameraType.Custom
-    
+
     cameraSubject = Camera.CameraSubject
     Camera.CameraSubject = nil
-    
+
     cameraCFrame = Camera.CFrame
     cameraFocus = Camera.Focus
-    
+
     mouseIconEnabled = UserInputService.MouseIconEnabled
     UserInputService.MouseIconEnabled = false
-    
+
     mouseBehavior = UserInputService.MouseBehavior
     UserInputService.MouseBehavior = Enum.MouseBehavior.Default
     end
-    
+
     -- Restore state
     function PlayerState.Pop()
     for name, isEnabled in pairs(coreGuis) do
@@ -2712,56 +2712,56 @@ function sandbox(var,func)
     gui.Enabled = true
     end
     end
-    
+
     Camera.FieldOfView = cameraFieldOfView
     cameraFieldOfView = nil
-    
+
     Camera.CameraType = cameraType
     cameraType = nil
-    
+
     Camera.CameraSubject = cameraSubject
     cameraSubject = nil
-    
+
     Camera.CFrame = cameraCFrame
     cameraCFrame = nil
-    
+
     Camera.Focus = cameraFocus
     cameraFocus = nil
-    
+
     UserInputService.MouseIconEnabled = mouseIconEnabled
     mouseIconEnabled = nil
-    
+
     UserInputService.MouseBehavior = mouseBehavior
     mouseBehavior = nil
     end
     end
-    
+
     local function StartFreecam()
     local cameraCFrame = Camera.CFrame
     cameraRot = Vector2.new(cameraCFrame:toEulerAnglesYXZ())
     cameraPos = cameraCFrame.p
     cameraFov = Camera.FieldOfView
-    
+
     velSpring:Reset(Vector3.new())
     panSpring:Reset(Vector2.new())
     fovSpring:Reset(0)
-    
+
     PlayerState.Push()
     RunService:BindToRenderStep("Freecam", Enum.RenderPriority.Camera.Value, StepFreecam)
     Input.StartCapture()
     end
-    
+
     local function StopFreecam()
     Input.StopCapture()
     RunService:UnbindFromRenderStep("Freecam")
     PlayerState.Pop()
     end
-    
+
     ------------------------------------------------------------------------
-    
+
     do
     local enabled = false
-    
+
     local function ToggleFreecam()
     if enabled then
     StopFreecam()
@@ -2770,7 +2770,7 @@ function sandbox(var,func)
     end
     enabled = not enabled
     end
-    
+
     local function CheckMacro(macro)
     for i = 1, #macro - 1 do
     if not UserInputService:IsKeyDown(macro[i]) then
@@ -2779,7 +2779,7 @@ function sandbox(var,func)
     end
     ToggleFreecam()
     end
-    
+
     local function HandleActivationInput(action, state, input)
     if state == Enum.UserInputState.Begin then
     if input.KeyCode == FREECAM_MACRO_KB[#FREECAM_MACRO_KB] then
@@ -2788,7 +2788,7 @@ function sandbox(var,func)
     end
     return Enum.ContextActionResult.Pass
     end
-    
+
     ContextActionService:BindActionAtPriority("FreecamToggle", HandleActivationInput, false, TOGGLE_INPUT_PRIORITY, FREECAM_MACRO_KB[#FREECAM_MACRO_KB])
     end
     end))
@@ -2815,4 +2815,4 @@ Tab:AddButton({
 })
 
 --end of code
-OrionLib:Init() 
+OrionLib:Init()AddButton(:
