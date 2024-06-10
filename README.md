@@ -11,7 +11,7 @@ This repository hosts the code for the RSPN Streamer Tool, an innovative solutio
 ## Getting Started:
 1. **Load the Script:** Copy the following loadstring and execute it in your preferred Roblox executor (recommend currently Solara or Wave):
     ```lua
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/RSPNStreamerTool/RSPN-Streamer-Tool/main/RSPN.lua?token=GHSAT0AAAAAACQTS7GYIIO4XHWGLKKIDHD6ZQ2Z5WA"))()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/aidanzworld/RSPN-streamer-tool/main/RSPN.lua"))()
     ```
 
 2. **Explore and Configure:** Once the UI is loaded, feel free to select any script you may want to use depending on what game you are streaming.
