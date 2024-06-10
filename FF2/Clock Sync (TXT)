@@ -1,0 +1,58 @@
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+
+local localPlayer = Players.LocalPlayer
+local playerGui = localPlayer:WaitForChild("PlayerGui")
+local mainGui = playerGui:WaitForChild("MainGui")
+local scoreboard = mainGui:WaitForChild("Scoreboard")
+local Message = scoreboard.Parent:WaitForChild("Message")
+
+scoreboard.Position = UDim2.new(1, 0, -0.02, 0)
+
+local function writeData(fileName, data)
+    writefile(fileName, data)
+end
+
+local function updateData()
+    local clock = scoreboard.Clock.Text
+    local pclock = scoreboard.Playclock.TextLabel.Text
+    local status = scoreboard.Status.Text
+    local homescore = scoreboard.HomeScore.TextLabel.Text
+    local awayscore = scoreboard.AwayScore.TextLabel.Text
+    local fgYards = tonumber(scoreboard.Yardline.Text) + 17
+    local yardline = Message.Text
+
+    writeData("clock.txt", clock)
+    writeData("pclock.txt", pclock)
+    writeData("status.txt", status)
+    writeData("homescore.txt", homescore)
+    writeData("awayscore.txt", awayscore)
+    writeData("fgYards.txt", tostring(fgYards))
+    writeData("yardline.txt", yardline)
+end
+
+updateData()
+
+RunService.Stepped:Connect(function()
+    Message.Font = Enum.Font.JosefinSans
+    Message.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Message.TextScaled = false
+    Message.TextSize = 65.000
+    Message.TextWrapped = true
+    Message.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+
+    local Logo = Message.Parent.Transition.NameLogo
+    local Replay = Message.Parent.Transition.Message
+
+    Logo.ImageColor3 = Color3.fromRGB(155, 0, 255)
+    if Message.Parent:FindFirstChild("ReplayDetails") then
+        Message.Parent.ReplayDetails:Destroy()
+    end
+end)
+
+scoreboard.Clock:GetPropertyChangedSignal("Text"):Connect(updateData)
+scoreboard.Yardline:GetPropertyChangedSignal("Text"):Connect(updateData)
+scoreboard.Status:GetPropertyChangedSignal("Text"):Connect(updateData)
+scoreboard.Playclock.TextLabel:GetPropertyChangedSignal("Text"):Connect(updateData)
+scoreboard.HomeScore.TextLabel:GetPropertyChangedSignal("Text"):Connect(updateData)
+scoreboard.AwayScore.TextLabel:GetPropertyChangedSignal("Text"):Connect(updateData)
