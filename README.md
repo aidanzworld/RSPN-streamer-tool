@@ -1,29 +1,29 @@
-# Welcome to the RSPN Streamer Tool
+# Welcome to the RSPN Streamer Tool page, made by the RSPN team.
 
-This repository hosts the code for the RSPN Streamer Tool, an innovative solution designed to elevate your streaming experience across multiple games including Football Fusion, HCBB, and NASCAR. Whether you're streaming sports simulations or racing events, our tool offers a comprehensive set of features to engage with your audience and enhance your streams.
+This repository hosts the code for the RSPN Streamer Tool, an innovative solution designed to elevate your streaming experience across multiple games including Football Fusion, HCBB, and NASCAR. Whether you're streaming sports simulations or racing events, our tool offers a comprehensive set of features to engage with your audience and enhance your streams with these scripts, so you can use stadiums, custom field decals, and cameras.
 
 ## Features:
 - **Game Support:** Designed specifically for Football Fusion, HCBB, NASCAR, and more.
-- **Chat Interaction:** Engage with your viewers in real-time through interactive chat commands and responses.
-- **Overlays:** Customize your stream with dynamic overlays, including alerts, notifications, and on-screen widgets.
+- **Aesthetic:** Have custom stadiums and other things in game, mostly for playoffs/championships to make the enviroment and experience better.
+- **Easier Control:** Use scripts to change the scoreboards and allowing it to update by itself and making streaming for leagues such as LFG or HCBB easier.
 - **Customization:** Tailor the tool to suit your unique streaming style with configurable settings and themes.
 
 ## Getting Started:
-1. **Load the Script:** Copy the following loadstring and execute it in your preferred Lua executor within your streaming environment:
+1. **Load the Script:** Copy the following loadstring and execute it in your preferred Roblox executor (recommend currently Solara or Wave):
     ```lua
     loadstring(game:HttpGet("https://raw.githubusercontent.com/RSPNStreamerTool/RSPN-Streamer-Tool/main/RSPN.lua?token=GHSAT0AAAAAACQTS7GYIIO4XHWGLKKIDHD6ZQ2Z5WA"))()
     ```
 
-2. **Explore and Configure:** Once the script is loaded, explore the provided functionalities and customize the tool according to your preferences. Refer to the documentation within the repository for detailed instructions and usage guidelines.
+2. **Explore and Configure:** Once the UI is loaded, feel free to select any script you may want to use depending on what game you are streaming.
 
-3. **Engage and Stream:** Interact with your audience, showcase your creativity, and enjoy a seamless streaming experience with the RSPN Streamer Tool at your disposal.
+3. **Engage and Stream:** Use the tool to help with production on the stream and enjoy a seamless streaming experience with the RSPN Streamer Tool at your disposal.
 
 ## Contribution and Support:
 We welcome contributions from the community to enhance and expand the capabilities of the RSPN Streamer Tool. Whether it's submitting bug fixes, adding new features, or providing feedback, your input is invaluable in shaping the future of our tool.
 
-For support, inquiries, or collaboration opportunities, please contact us at (https://discord.gg/bKuNrpQAMp). We're here to assist you every step of the way.
+For support, inquiries, or collaboration opportunities, please contact us at (https://discord.gg/bKuNrpQAMp) or contact @aidanzworld on discord. We're here to assist you every step of the way.
 
-Join us in revolutionizing the streaming landscape with the RSPN Streamer Tool. Happy streaming!
+Join us in revolutionizing the Ro-Sports streaming landscape with the RSPN Streamer Tool. Happy streaming!
 
 ## YouTube Tutorial
 
