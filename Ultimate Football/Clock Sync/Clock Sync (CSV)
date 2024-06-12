@@ -1,0 +1,64 @@
+local function filterCharacters(text)
+    return text:gsub("[<b>/]", "")
+end
+
+local function formatClock(clock)
+    clock = filterCharacters(clock)
+    if string.sub(clock, 1, 1) == "0" then
+        return string.sub(clock, 2)
+    end
+    return clock
+end
+
+local function updateData()
+    local s = game.Players.LocalPlayer.PlayerGui.HUD.Base.Scoreboards.DefaultScoreboard:FindFirstChild("Container")
+    if not s then
+        return
+    end
+    
+    s.Position = UDim2.new(100, 0, -0.02, 0)  
+
+    local clock = formatClock(s.Clock.Contents2.TextLabel.Text)
+    local pclock = filterCharacters(s.PlayClock.Contents2.TextLabel.Text)
+    local status = filterCharacters(s.PlayDown.Contents2.TextLabel.Text)
+    local homescore = filterCharacters(s.HomeTeam.Contents1.Scores.Score1.Text)
+    local awayscore = filterCharacters(s.AwayTeam.Contents1.Scores.Score1.Text)
+    local quarter = filterCharacters(s.Quarter.Contents2.TextLabel.Text)
+    
+    local csvData = string.format("%s,%s,%s,%s,%s,%s", clock, pclock, status, homescore, awayscore, quarter)
+    
+    writefile("UltimateFootball.csv", csvData)
+end
+
+updateData()
+
+local s = game.Players.LocalPlayer.PlayerGui.HUD.Base.Scoreboards.DefaultScoreboard:FindFirstChild("Container")
+local d = game.Players.LocalPlayer.PlayerGui.HUD.Base.Scoreboards.DefaultScoreboard:FindFirstChild("Dropdowns")
+
+d.Position = UDim2.new(100, 0, -0.02, 0)
+
+local Player = game.Players.LocalPlayer
+local PlayerGui = Player:WaitForChild("PlayerGui")
+
+local guiToEnable = {"ExperienceChat", "TopbarPlus", "Mechanics"}
+
+local function DisableScreenGui(gui)
+    if gui:IsA("ScreenGui") and not table.find(guiToEnable, gui.Name) then
+        gui.Enabled = false
+    end
+end
+
+for _, gui in ipairs(PlayerGui:GetChildren()) do
+    DisableScreenGui(gui)
+end
+
+PlayerGui.ChildAdded:Connect(function(child)
+    DisableScreenGui(child)
+end)
+
+s.Clock.Contents2.TextLabel:GetPropertyChangedSignal("Text"):Connect(updateData)
+s.PlayClock.Contents2.TextLabel:GetPropertyChangedSignal("Text"):Connect(updateData)
+s.PlayDown.Contents2.TextLabel:GetPropertyChangedSignal("Text"):Connect(updateData)
+s.HomeTeam.Contents1.Scores.Score1:GetPropertyChangedSignal("Text"):Connect(updateData)
+s.AwayTeam.Contents1.Scores.Score1:GetPropertyChangedSignal("Text"):Connect(updateData)
+s.Quarter.Contents2.TextLabel:GetPropertyChangedSignal("Text"):Connect(updateData)
