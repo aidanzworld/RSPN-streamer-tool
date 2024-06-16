@@ -1,0 +1,52 @@
+repeat wait() until game:IsLoaded()
+local teamName = Workspace.GameData.TeamData.Home.TeamInfo.TeamName.Value
+
+if teamName == "Carolina Hurricanes" then
+    base1 = Workspace.GameModel.Stad.Jumbotron.Board.Main
+else
+    base1 = Workspace.GameModel.Stad.jumbotron.InsideScreen.Main
+end
+
+-- Create file names for each column
+local fileNames = {
+    "HomeScore.txt",
+    "AwayScore.txt",
+    "Period.txt",
+    "Time.txt",
+    "HomeSOG.txt",
+    "AwaySOG.txt"
+}
+
+local function updatedata()
+    local homeScore = base1.home.Text
+    local awayScore = base1.away.Text
+    local Period = base1.period.Text
+    local Time = base1.time.Text
+    local HomeSOG = base1.HS.Text
+    local AwaySOG = base1.AS.Text
+
+    -- Write data to corresponding files
+    for i, fileName in ipairs(fileNames) do
+        local data
+        if i == 1 then
+            data = homeScore
+        elseif i == 2 then
+            data = awayScore
+        elseif i == 3 then
+            data = Period
+        elseif i == 4 then
+            data = Time
+        elseif i == 5 then
+            data = HomeSOG
+        elseif i == 6 then
+            data = AwaySOG
+        end
+        writefile(fileName, data)
+    end
+
+    print("Stats written to TXT files")
+end
+
+while wait(1) do
+    updatedata()
+end
