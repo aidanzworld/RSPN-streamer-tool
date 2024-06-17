@@ -1,0 +1,81 @@
+repeat wait() until game:IsLoaded()
+local base = game.Players.LocalPlayer.PlayerGui.Scoreboard.ScoreHolder.Scoreboard
+
+print("working")
+
+-- Function to get emoji based on visibility
+local function getEmojiFromVisibility(visibility)
+    return visibility and "■" or "" --change the symbol to yours--
+end
+
+-- Function to update the bases in the CSV
+function updateBasesInCSV()
+    local first = base.BaseOuts.Base.B1.Visible
+    local second CSV file locally
+    local success, errorMessage = pcall(function()
+        writefile("Bases.csv", csvContent)
+        print("Bases written to CSV")
+    end)
+
+    if not success then
+        warn("Failed to write bases to CSV: " .. errorMessage)
+    end
+end
+
+-- This function should be called regularly, for example, in your game update loop
+function updateGame()
+    while true do
+        updateBasesInCSV()
+        wait(1) -- Adjust this interval based on your preference
+    end
+end
+
+updateGame() -- Call updateGame initially to start updating bases = base.BaseOuts.Base.B2.Visible
+    local third = base.BaseOuts.Base.B3.Visible
+
+    local csvContent = "First,Second,Third\n"
+        .. getEmojiFromVisibility(first) .. "," 
+        .. getEmojiFromVisibility(second) .. "," 
+        .. getEmojiFromVisibility(third)
+
+    -- Write to a
+
+---------------------------------------------------------------------
+
+repeat wait() until game:IsLoaded()
+
+local base = game.Players.LocalPlayer.PlayerGui.Scoreboard.ScoreHolder.Scoreboard
+
+print("working")
+
+-- Function to get emoji based on visibility
+local function getEmojiFromVisibility(visibility)
+    return visibility and "■" or "" -- Change the symbol to yours
+end
+
+-- Function to update the visibility of a base in a text file
+local function updateBaseInTextFile(baseName, visibility)
+    local txtContent = getEmojiFromVisibility(visibility)
+
+    -- Assume writefile function is defined elsewhere
+    local success, errorMessage = pcall(function()
+        writefile(baseName .. ".txt", txtContent)
+        print("Base " .. baseName .. " written to TXT file")
+    end)
+
+    if not success then
+        warn("Failed to write base " .. baseName .. " to TXT file: " .. errorMessage)
+    end
+end
+
+-- This function should be called regularly, for example, in your game update loop
+local function updateBases()
+    updateBaseInTextFile("FirstBase", base.BaseOuts.Base.B1.Visible)
+    updateBaseInTextFile("SecondBase", base.BaseOuts.Base.B2.Visible)
+    updateBaseInTextFile("ThirdBase", base.BaseOuts.Base.B3.Visible)
+end
+
+while true do
+    updateBases()
+    wait(1) -- Adjust this interval based on your preference
+end
