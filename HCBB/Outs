@@ -1,0 +1,76 @@
+
+repeat wait() until game:IsLoaded()
+local base = game.Players.LocalPlayer.PlayerGui.Scoreboard.ScoreHolder.Scoreboard
+
+print("working")
+
+-- Function to get emoji based on visibility
+local function getEmojiFromVisibility(visibility)
+    return visibility and "●" or ""
+end
+
+-- Function to update the outs in the CSV
+function updateOutsInCSV()
+    while true do
+        local out1 = base.Count.Outs[1].Visible
+        local out2 = base.Count.Outs[2].Visible
+
+        local csvContent = "Out1,Out2\n"
+            .. getEmojiFromVisibility(out1) .. "," 
+            .. getEmojiFromVisibility(out2)
+
+        -- Write to a CSV file locally
+        local success, errorMessage = pcall(function()
+            writefile("Outs.csv", csvContent)
+            print("Outs written to CSV")
+        end)
+
+        if not success then
+            warn("Failed to write outs to CSV: " .. errorMessage)
+        end
+
+        wait(1) -- Adjust this interval based on your preference
+    end
+end
+
+-- Call the function to start updating the CSV
+updateOutsInCSV()
+
+------------------------------------------------------------
+
+repeat wait() until game:IsLoaded()
+
+local base = game.Players.LocalPlayer.PlayerGui.Scoreboard.ScoreHolder.Scoreboard
+
+print("working")
+
+-- Function to get emoji based on visibility
+local function getEmojiFromVisibility(visibility)
+    return visibility and "●" or ""
+end
+
+-- Function to update the visibility of an out in a text file
+local function updateOutInTextFile(outIndex, visibility)
+    local txtContent = getEmojiFromVisibility(visibility)
+
+    -- Assume writefile function is defined elsewhere
+    local success, errorMessage = pcall(function()
+        writefile("Out" .. outIndex .. ".txt", txtContent)
+        print("Out " .. outIndex .. " written to TXT file")
+    end)
+
+    if not success then
+        warn("Failed to write Out " .. outIndex .. " to TXT file: " .. errorMessage)
+    end
+end
+
+-- This function should be called regularly, for example, in your game update loop
+local function updateOuts()
+    updateOutInTextFile(1, base.Count.Outs[1].Visible)
+    updateOutInTextFile(2, base.Count.Outs[2].Visible)
+end
+
+while true do
+    updateOuts()
+    wait(1) -- Adjust this interval based on your preference
+end
