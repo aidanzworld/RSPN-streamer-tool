@@ -1,0 +1,43 @@
+repeat wait() until game:IsLoaded()
+local teamName = Workspace.GameData.TeamData.Home.TeamInfo.TeamName.Value
+
+if teamName == "Carolina Hurricanes" then
+    base1 = Workspace.GameModel.Stad.Jumbotron.Board.Main
+else
+    base1 = Workspace.GameModel.Stad.jumbotron.InsideScreen.Main
+end
+
+local fileNames = {
+    "HomeScore.txt",
+    "AwayScore.txt",
+    "Period.txt",
+    "Time.txt",
+    "HomeSOG.txt",
+    "AwaySOG.txt"
+}
+
+local function updatedata()
+    local homeScore = base1.home.Text
+    local awayScore = base1.away.Text
+    local Period = base1.period.Text
+    local Time = base1.time.Text
+    local HomeSOG = base1.HS.Text
+    local AwaySOG = base1.AS.Text
+
+    local csvString = string.format("%s,%s,%s,%s,%s,%s",
+        homeScore,
+        awayScore,
+        Period,
+        Time,
+        HomeSOG,
+        AwaySOG
+    )
+
+    writefile("HHCO Score.csv", csvString)
+
+    print("Stats written to CSV file")
+end
+
+while wait(1) do
+    updatedata()
+end
