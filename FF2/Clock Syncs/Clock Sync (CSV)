@@ -7,45 +7,46 @@ local mainGui = playerGui:WaitForChild("MainGui")
 local scoreboard = mainGui:WaitForChild("Scoreboard")
 local Message = scoreboard.Parent:WaitForChild("Message")
 
-        scoreboard.Position = UDim2.new(1, 0, -0.02, 0)
+scoreboard.Position = UDim2.new(1, 0, -0.02, 0)
 
-        local fileName = "LFG-FF.csv"
+local fileName = "LFG-FF.csv"
 
-        local function updateData()
-            local clock = scoreboard.Clock.Text
-            local pclock = scoreboard.Playclock.TextLabel.Text
-            local status = scoreboard.Status.Text
-            local homescore = scoreboard.HomeScore.TextLabel.Text
-            local awayscore = scoreboard.AwayScore.TextLabel.Text
-            local fgYards = tonumber(scoreboard.Yardline.Text) + 17
-            local yardline = Message.Text
+local function updateData()
+    local clock = scoreboard.Clock.Text
+    local pclock = scoreboard.Playclock.TextLabel.Text
+    local status = scoreboard.Status.Text
+    local homescore = scoreboard.HomeScore.TextLabel.Text
+    local awayscore = scoreboard.AwayScore.TextLabel.Text
+    local fgYards = tonumber(scoreboard.Yardline.Text) + 17
+    local yardline = Message.Text
 
-            local data = string.format("%s,%s,%s,%s,%s,%s\n", clock, pclock, status, homescore, awayscore, yardline, fgYards)
-            writefile(fileName, data)
-        end
+    local data = string.format("Clock,Playclock,Status,HomeScore,AwayScore,Yardline,FGYards\n%s,%s,%s,%s,%s,%s,%d", 
+                               clock, pclock, status, homescore, awayscore, yardline, fgYards)
 
-        updateData()
+    writefile(fileName, data)
+end
 
-        game.RunService.Stepped:Connect(function()
-            Message.Font = Enum.Font.JosefinSans
-            Message.TextColor3 = Color3.fromRGB(255, 255, 255)
-            Message.TextScaled = false
-            Message.TextSize = 65.000
-            Message.TextWrapped = true
-            Message.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+updateData()
 
-            local Logo = Message.Parent.Transition.NameLogo
-            local Replay = Message.Parent.Transition.Message
+scoreboard.Clock:GetPropertyChangedSignal("Text"):Connect(updateData)
+scoreboard.Yardline:GetPropertyChangedSignal("Text"):Connect(updateData)
+scoreboard.Status:GetPropertyChangedSignal("Text"):Connect(updateData)
+scoreboard.Playclock.TextLabel:GetPropertyChangedSignal("Text"):Connect(updateData)
+scoreboard.HomeScore.TextLabel:GetPropertyChangedSignal("Text"):Connect(updateData)
+scoreboard.AwayScore.TextLabel:GetPropertyChangedSignal("Text"):Connect(updateData)
 
-            Logo.ImageColor3 = Color3.fromRGB(155, 0, 255)
-            if Message.Parent:FindFirstChild("ReplayDetails") then
-                Message.Parent.ReplayDetails:Destroy()
-            end
-        end)
+RunService.Stepped:Connect(function()
+    Message.Font = Enum.Font.JosefinSans
+    Message.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Message.TextScaled = false
+    Message.TextSize = 65.000
+    Message.TextWrapped = true
+    Message.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
 
-        scoreboard.Clock:GetPropertyChangedSignal("Text"):Connect(updateData)
-        scoreboard.Yardline:GetPropertyChangedSignal("Text"):Connect(updateData)
-        scoreboard.Status:GetPropertyChangedSignal("Text"):Connect(updateData)
-        scoreboard.Playclock.TextLabel:GetPropertyChangedSignal("Text"):Connect(updateData)
-        scoreboard.HomeScore.TextLabel:GetPropertyChangedSignal("Text"):Connect(updateData)
-        scoreboard.AwayScore.TextLabel:GetPropertyChangedSignal("Text"):Connect(updateData)
+    local Logo = Message.Parent.Transition.NameLogo
+    Logo.ImageColor3 = Color3.fromRGB(155, 0, 255)
+
+    if Message.Parent:FindFirstChild("ReplayDetails") then
+        Message.Parent.ReplayDetails:Destroy()
+    end
+end)
